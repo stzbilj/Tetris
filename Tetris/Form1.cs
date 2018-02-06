@@ -15,18 +15,28 @@ namespace Tetris
         //ubaciti timer i funkciju koja reagira na event
         private Button[,] buttonArray;
         private TetrisField tField;
+        int br = 0;
 
         public Form1()
         {
             buttonArray = new Button[20, 10];
             tField = new TetrisField();
+            this.CreateGrid();
+            
+            this.BackColor = Color.Aqua;
+            this.Size = new Size(30 * 20, 30 * 30);
+            InitializeComponent();
+            timer1.Enabled = true;
+        }
 
+        private void CreateGrid()
+        {
             for (int i = 0; i < 20; i++)
                 for (int j = 0; j < 10; j++)
                 {
                     buttonArray[i, j] = new Button();
                     buttonArray[i, j].Size = new Size(30, 30);
-                    buttonArray[i, j].Location = new Point(31*j + 1, 31*i + 1);
+                    buttonArray[i, j].Location = new Point(31 * j + 1, 31 * i + 1);
                     buttonArray[i, j].Enabled = false;
                     //color will depend on Teteris field
                     switch (tField.GetType(i, j))
@@ -50,19 +60,13 @@ namespace Tetris
                     buttonArray[i, j].FlatAppearance.BorderSize = 0;
                     this.Controls.Add(buttonArray[i, j]);
                 }
-            this.BackColor = Color.Aqua;
-            this.Size = new Size(30 * 20, 30 * 30);
-            InitializeComponent();
         }
 
-        
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //Pomicanje objekta prema dolje
+            //Provjera sudara
+        }
     }
 
-    
-
-    /*public class TetrisObject
-    {
-        private int[,] tObject;
-        
-    }*/
 }
