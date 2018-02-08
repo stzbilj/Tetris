@@ -45,6 +45,44 @@ namespace Tetris
             set { tObject = value; }
         }
 
+        //Move left, right, down and rotations are shown with this
+        //Call after checking all conditions for move
+        private void MoveObject()
+        {
+
+            for (int i = 0; i < tObject.Size(0); i++)
+                for (int j = 0; j < tObject.Size(1); j++)
+                {
+                    if (this.IsObject(i, j))
+                    {
+                        tField[i, j] = Color.Yellow;
+                    }
+                    else
+                    {
+                        if (tField[i, j] == Color.Yellow)
+                            tField[i, j] = Color.Red;
+                    }
+                }
+            if (row + tObject.Size(0) < 10)
+            {
+                for (int i = 0; i < tObject.Size(1); i++)
+                    if (tField[row + tObject.Size(0), i] == Color.Yellow)
+                        tField[row + tObject.Size(0), i] = Color.Red;
+            }
+            if (row > 0)
+            {
+                for (int i = 0; i < tObject.Size(1); i++)
+                    if (tField[row - 1, i] == Color.Yellow)
+                        tField[row - 1, i] = Color.Red;
+            }
+
+            if (column > 0)
+            {
+                for (int i = 0; i < tObject.Size(0); i++)
+                    if (tField[i, column - 1] == Color.Yellow)
+                        tField[i, column - 1] = Color.Red;
+            }
+        }
         //colision functions
     }
 }
