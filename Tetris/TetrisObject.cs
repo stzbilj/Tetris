@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 namespace Tetris
 {
     public class TetrisObject
-    {
+    {   
         //Yellow moving object, Red empty field
         private Color[, ] matrix;
-
+        private int X = 0;
+        private int Y = 0;
         public TetrisObject(int[ , ] _matrix)
         {
             matrix = new Color[3, 3];
@@ -25,8 +26,37 @@ namespace Tetris
                     }
                 }
             }
-
             this.Reposition();
+
+            for (int i = 2; i >= 0; --i)
+            {
+                if (!this.IsNull(0, i) && X == 0)
+                {
+                    X = i + 1;
+                }
+                if (!this.IsNull(1, i) && Y == 0)
+                {
+                    Y = i + 1;
+                }
+            }
+            
+        }
+
+        public TetrisObject(TetrisObject tObject)
+        {
+            this.matrix = new Color[3, 3];
+
+            for (int i = 0; i < 3; ++i)
+            {
+                for (int j = 0; j < 3; ++j)
+                {
+                    this.matrix[i, j] = tObject.matrix[i, j];
+                }
+            }
+
+            this.X = tObject.X;
+            this.Y = tObject.Y;
+
         }
 
         private bool IsNull(int dimension, int row) {
@@ -86,6 +116,10 @@ namespace Tetris
             matrix[1, 0] = temp;
 
             this.Reposition();
+
+            int t = X;
+            X = Y;
+            Y = t;
         }
 
         public void RotateRight()
@@ -105,17 +139,16 @@ namespace Tetris
             matrix[1, 2] = temp;
 
             this.Reposition();
+
+            int t = X;
+            X = Y;
+            Y = t;
         }
 
         public int Size(int dimension) {
-            int dim = 0;
-            for (int i = 2; i >= 0; --i) {
-                if (!this.IsNull(dimension, i)) {
-                    dim = i + 1;
-                    break;
-                }
-            }
-            return dim;
+            if (dimension == 0) return X;
+            if (dimension == 1) return Y;
+            return 0;
         }
 
         public Color GetColor(int i, int j) {

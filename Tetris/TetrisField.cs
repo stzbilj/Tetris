@@ -10,29 +10,36 @@ namespace Tetris
 {
     public class TetrisField
     {
-        //Red empty, Grey block
-        private Button[,] buttonArray;
+        //Red empty, Gray block
+        private Label[,] labelArray;
 
-        public TetrisField(ref Button[,] buttons)
+        public TetrisField(ref Label[,] labels)
         {
-            buttonArray = buttons;
-            for (int i = 0; i < buttonArray.GetLength(0); ++i)
+            labelArray = labels;
+            for (int i = 0; i < labelArray.GetLength(0); ++i)
             {
-                for (int j = 0; j < buttonArray.GetLength(1); ++j)
+                for (int j = 0; j < labelArray.GetLength(1); ++j)
                 {
-                    buttonArray[i, j].BackColor = Color.Red;
+                    labelArray[i, j].BackColor = Color.Red;
                 }
             }
         }
 
         public Color this[int i, int j] {
-            get { return buttonArray[i, j].BackColor; }
-            set { buttonArray[i, j].BackColor = value; }
+            get {
+                if (i > 0 && i < labelArray.GetLength(0) && j > 0 && j < labelArray.GetLength(1))
+                    return labelArray[i, j].BackColor;
+                throw new IndexOutOfRangeException();
+            }
+            set {
+                if(i > 0 && i < labelArray.GetLength(0) && j > 0 && j < labelArray.GetLength(1))
+                    labelArray[i, j].BackColor = value;
+            }
         }
 
         private bool IsRowFull(int row)
         {
-            for (int i = 0; i < buttonArray.GetLength(1); ++i)
+            for (int i = 0; i < labelArray.GetLength(1); ++i)
             {
                 if (this[row, i] == Color.Red)
                     return false;
@@ -43,7 +50,7 @@ namespace Tetris
         private int CountGray(int row)
         {
             int br = 0;
-            for (int i = 0; i < buttonArray.GetLength(1); ++i)
+            for (int i = 0; i < labelArray.GetLength(1); ++i)
             {
                 if (this[row, i] == Color.Gray)
                     br++;
@@ -65,22 +72,22 @@ namespace Tetris
         public int ClearFullRows() {
             int num = 0;
             int numG;
-            for (int i = buttonArray.GetLength(0) - 1; i >= 0; i--) {
+            for (int i = labelArray.GetLength(0) - 1; i >= 0; i--) {
                 numG = this.CountGray(i);
-                if (numG == buttonArray.GetLength(1)) {
+                if (numG == labelArray.GetLength(1)) {
                     num++;
                 }
                 else {
                     if (numG == 0) {
                         for (int j = i + 1; j <= i + num; j++) {
-                            for (int k = 0; k < buttonArray.GetLength(1); ++k) {
+                            for (int k = 0; k < labelArray.GetLength(1); ++k) {
                                 if(this[j, k] != Color.Yellow)
                                     this[j, k] = Color.Red;
                             }
                         }
                         break;
                     }
-                    for (int j = 0; j < buttonArray.GetLength(1); ++j) {
+                    for (int j = 0; j < labelArray.GetLength(1); ++j) {
                         if (this[i, j] != Color.Yellow)
                             this[i + num, j] = this[i, j];
                         else
@@ -91,5 +98,9 @@ namespace Tetris
             return num;
         }
 
+        public int Size(int dimension)
+        {
+            return labelArray.GetLength(dimension);
+        }
     }
 }

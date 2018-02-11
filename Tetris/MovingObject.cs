@@ -49,40 +49,88 @@ namespace Tetris
         //Call after checking all conditions for move
         private void MoveObject()
         {
-
-            for (int i = 0; i < tObject.Size(0); i++)
-                for (int j = 0; j < tObject.Size(1); j++)
+            int maxSize = tObject.Size(0);
+            if (maxSize < tObject.Size(1))
+            {
+                maxSize = tObject.Size(1);
+            }
+            for (int i = row - 1; i < row + maxSize; i++)
+                for (int j = column - 1; j < column + maxSize + 1; j++)
                 {
-                    if (this.IsObject(i, j))
+                    if (i > 0 && i < tField.Size(0) && j > 0 && j < tField.Size(1))
                     {
-                        tField[i, j] = Color.Yellow;
+                        if (this.IsObject(i, j))
+                        {
+                            tField[i, j] = Color.Yellow;
+                        }
+                        else
+                        {
+                                if (tField[i, j] == Color.Yellow)
+                                    tField[i, j] = Color.Red;
+                        }
                     }
                     else
                     {
-                        if (tField[i, j] == Color.Yellow)
-                            tField[i, j] = Color.Red;
+                        break;
                     }
                 }
-            if (row + tObject.Size(0) < 10)
+        }
+
+        private bool CheckCollision(Position pos)
+        {
+            int newRow = row;
+            int newColumn = column;
+            TetrisObject newObject = new TetrisObject(tObject);
+            bool rotation = false;
+            switch (pos)
             {
-                for (int i = 0; i < tObject.Size(1); i++)
-                    if (tField[row + tObject.Size(0), i] == Color.Yellow)
-                        tField[row + tObject.Size(0), i] = Color.Red;
+                case Position.DOWN:
+                    newRow++;
+                    break;
+                case Position.LEFT:
+                    newColumn--;
+                    break;
+                case Position.RIGHT:
+                    newColumn++;
+                    break;
+                case Position.ROTATEL:
+                    newObject.RotateLeft();
+                    rotation = true;
+                    break;
+                case Position.ROTATER:
+                    newObject.RotateRight();
+                    rotation = true;
+                    break;
             }
-            if (row > 0)
+            if (rotation)
             {
-                for (int i = 0; i < tObject.Size(1); i++)
-                    if (tField[row - 1, i] == Color.Yellow)
-                        tField[row - 1, i] = Color.Red;
+                if (newRow + newObject.Size(0) > tField.Size(0))
+                    return true;
+                if (newColumn + newObject.Size(1) > tField.Size(1))
+                {
+                    newColumn = newColumn + newObject.Size(1) - newObject.Size(0);
+                    if (newColumn < 0)
+                        return true;
+                    
+                }
+            }
+            if (newRow + newObject.Size(0) >= tField.Size(0) || newColumn < 0 || newColumn + newObject.Size(1) >= tField.Size(1) )
+            {
+                return true;
+            }
+            for (int i = newObject.Size(0) - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < newObject.Size(1); j++) {
+                    if(tField[newRow + i, newColumn + j] == Color.Gray && newObject.GetColor(i, j) == Color.Yellow)
+                    {
+                        return true;
+                    }
+                }
             }
 
-            if (column > 0)
-            {
-                for (int i = 0; i < tObject.Size(0); i++)
-                    if (tField[i, column - 1] == Color.Yellow)
-                        tField[i, column - 1] = Color.Red;
-            }
+            row = newRow;
+            column = newColumn;
+            return false;   
         }
-        //colision functions
     }
 }
