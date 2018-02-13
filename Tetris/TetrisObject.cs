@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -27,16 +28,16 @@ namespace Tetris
                 }
             }
             this.Reposition();
-
+            
             for (int i = 2; i >= 0; --i)
             {
-                if (!this.IsNull(0, i) && X == 0)
-                {
-                    X = i + 1;
-                }
-                if (!this.IsNull(1, i) && Y == 0)
+                if (!this.IsNull(0, i) && Y == 0)
                 {
                     Y = i + 1;
+                }
+                if (!this.IsNull(1, i) && X == 0)
+                {
+                    X = i + 1;
                 }
             }
             
@@ -60,7 +61,7 @@ namespace Tetris
         }
 
         private bool IsNull(int dimension, int row) {
-            for (int i = 1; i < 3; ++i) {
+            for (int i = 0; i < 3; ++i) {
                 if (dimension == 0 && matrix[i, row] != Color.Red) {
                     return false;   
                 }
@@ -78,7 +79,7 @@ namespace Tetris
             //row
             while ( this.IsNull(0, 0) ) {
                 for (int i = 0; i < 3; ++i) {
-                    for (int j = 0; i < 2; ++j) {
+                    for (int j = 0; j < 2; ++j) {
                         matrix[i, j] = matrix[i, j + 1];
                     }
                     matrix[i, 2] = Color.Red;
@@ -90,7 +91,7 @@ namespace Tetris
             {
                 for (int i = 0; i < 3; ++i)
                 {
-                    for (int j = 0; i < 2; ++j)
+                    for (int j = 0; j < 2; ++j)
                     {
                         matrix[j, i] = matrix[j + 1, i];
                     }

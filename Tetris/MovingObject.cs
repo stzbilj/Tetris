@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -19,11 +20,11 @@ namespace Tetris
             tField = _tField;
             tObject = _tObject;
             row = 0;
-            column = 5;
+            column = 4;
         }
 
         public bool IsObject(int _row, int _column) {
-            if(row > _row || row + tObject.Size(0) < _row || column >_column || column + tObject.Size(0) < _column)
+            if ( _row - row < 0 || _row - row >= tObject.Size(0) || _column - column < 0 || _column - column >= tObject.Size(1))
                 return false;
             if (tObject.GetColor(_row - row, _column - column) == Color.Yellow)
                 return true;
@@ -47,17 +48,18 @@ namespace Tetris
 
         //Move left, right, down and rotations are shown with this
         //Call after checking all conditions for move
-        private void MoveObject()
+        public void MoveObject()
         {
             int maxSize = tObject.Size(0);
             if (maxSize < tObject.Size(1))
             {
                 maxSize = tObject.Size(1);
             }
-            for (int i = row - 1; i < row + maxSize; i++)
+            
+            for (int i = row - 1; i < row + maxSize + 1; i++)
                 for (int j = column - 1; j < column + maxSize + 1; j++)
                 {
-                    if (i > 0 && i < tField.Size(0) && j > 0 && j < tField.Size(1))
+                    if (i >= 0 && i < tField.Size(0) && j >= 0 && j < tField.Size(1))
                     {
                         if (this.IsObject(i, j))
                         {

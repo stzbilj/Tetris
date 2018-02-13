@@ -28,6 +28,11 @@ namespace Tetris
             this.Size = new Size(30 * 20, 30 * 30);
             InitializeComponent();
             timer1.Enabled = true;
+
+            int[,] objekt = new int[,] { { 1, 0, 0 }, { 1, 1, 0 }, { 1, 0, 0 } };
+            TetrisObject tObject1 = new TetrisObject(objekt);
+            mObject = new MovingObject(tField, tObject1);
+            mObject.MoveObject();
         }
 
         private void CreateGrid()

@@ -27,12 +27,12 @@ namespace Tetris
 
         public Color this[int i, int j] {
             get {
-                if (i > 0 && i < labelArray.GetLength(0) && j > 0 && j < labelArray.GetLength(1))
+                if (i >= 0 && i < labelArray.GetLength(0) && j >= 0 && j < labelArray.GetLength(1))
                     return labelArray[i, j].BackColor;
                 throw new IndexOutOfRangeException();
             }
             set {
-                if(i > 0 && i < labelArray.GetLength(0) && j > 0 && j < labelArray.GetLength(1))
+                if(i >= 0 && i < labelArray.GetLength(0) && j >= 0 && j < labelArray.GetLength(1))
                     labelArray[i, j].BackColor = value;
             }
         }
