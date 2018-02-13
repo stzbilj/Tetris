@@ -62,7 +62,7 @@ namespace Tetris
         {
             for (int i = 0; i < tObject.Size(0); ++i) {
                 for (int j = 0; j < tObject.Size(1); ++j) {
-                    if (tObject.GetColor(row + i, column + j) == Color.Yellow)
+                    if (tObject.GetColor(i,j) == Color.Yellow)
                         this[row + i, column + j] = Color.Gray;
                 }
             }

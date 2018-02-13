@@ -32,7 +32,6 @@ namespace Tetris
             int[,] objekt = new int[,] { { 1, 0, 0 }, { 1, 1, 0 }, { 1, 0, 0 } };
             TetrisObject tObject1 = new TetrisObject(objekt);
             mObject = new MovingObject(tField, tObject1);
-            mObject.MoveObject();
         }
 
         private void CreateGrid()
@@ -53,11 +52,11 @@ namespace Tetris
             //We change period depending on score, but not here
             //It onley move object down
             //if(mObject.MoveDown())
-                //this.ShowMoveOfTheObject
+            //this.ShowMoveOfTheObject
             //else
-                //
-                //change grid?
-            
+            //
+            //change grid?
+            mObject.MoveDown();
 
         }
     }

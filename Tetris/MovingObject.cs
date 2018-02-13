@@ -48,7 +48,7 @@ namespace Tetris
 
         //Move left, right, down and rotations are shown with this
         //Call after checking all conditions for move
-        public void MoveObject()
+        private void MoveObject()
         {
             int maxSize = tObject.Size(0);
             if (maxSize < tObject.Size(1))
@@ -77,7 +77,17 @@ namespace Tetris
                     }
                 }
         }
-
+        public void MoveDown()
+        {
+            if(!CheckCollision(Position.DOWN))
+            {
+                this.MoveObject();
+            }
+            else
+            {
+                tField.PlaceObject(row, column, tObject);
+            }
+        }
         private bool CheckCollision(Position pos)
         {
             int newRow = row;
@@ -116,7 +126,7 @@ namespace Tetris
                     
                 }
             }
-            if (newRow + newObject.Size(0) >= tField.Size(0) || newColumn < 0 || newColumn + newObject.Size(1) >= tField.Size(1) )
+            if (newRow + newObject.Size(0) > tField.Size(0) || newColumn < 0 || newColumn + newObject.Size(1) >= tField.Size(1) )
             {
                 return true;
             }
