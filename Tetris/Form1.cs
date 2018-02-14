@@ -16,6 +16,8 @@ namespace Tetris
         private Label[,] labelArray;
         private TetrisField tField;
         private MovingObject mObject;
+        private TetrisObject[] listOfObjects;
+        bool mObjectExists = false;
         int br = 0;
 
         public Form1()
@@ -28,10 +30,33 @@ namespace Tetris
             this.Size = new Size(30 * 20, 30 * 30);
             InitializeComponent();
             timer1.Enabled = true;
+            
+            //Tetris objects in a game, player can add new objects
+            int[,] objekt1 = new int[,] { { 1, 1, 1 }, { 0, 0, 0 }, { 0, 0, 0 } };
+            TetrisObject tObject1 = new TetrisObject(objekt1);
 
-            int[,] objekt = new int[,] { { 1, 0, 0 }, { 1, 1, 0 }, { 1, 0, 0 } };
-            TetrisObject tObject1 = new TetrisObject(objekt);
-            mObject = new MovingObject(tField, tObject1);
+            int[,] objekt2 = new int[,] { { 0, 1, 0 }, { 0, 1, 0 }, { 1, 1, 0 } };
+            TetrisObject tObject2 = new TetrisObject(objekt2);
+
+            int[,] objekt3 = new int[,] { { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 1 } };
+            TetrisObject tObject3 = new TetrisObject(objekt3);
+
+            int[,] objekt4 = new int[,] { { 1, 1, 0 }, { 1, 1, 0 }, { 0, 0, 0 } };
+            TetrisObject tObject4 = new TetrisObject(objekt4);
+
+            int[,] objekt5 = new int[,] { { 1, 1, 0 }, { 0, 1, 1 }, { 0, 0, 0 } };
+            TetrisObject tObject5 = new TetrisObject(objekt5);
+
+            int[,] objekt6 = new int[,] { { 0, 1, 0 }, { 1, 1, 1 }, { 0, 0, 0 } };
+            TetrisObject tObject6 = new TetrisObject(objekt6);
+
+            int[,] objekt7 = new int[,] { { 0, 0, 0 }, { 0, 1, 1 }, { 1, 1, 0 } };
+            TetrisObject tObject7 = new TetrisObject(objekt7);
+
+            listOfObjects = new TetrisObject[7] { tObject1,tObject2,tObject3,tObject4,tObject5,tObject6,tObject7};
+
+
+
         }
 
         private void CreateGrid()
@@ -56,7 +81,26 @@ namespace Tetris
             //else
             //
             //change grid?
-            mObject.MoveDown();
+            
+            //Ovo je jako glupo ali trenutno nemam bolju ideju
+            Random rnd = new Random();
+            int objBroj;
+            if(!mObjectExists)
+            {
+                objBroj = rnd.Next(0, 7);
+                mObject = new MovingObject(tField, listOfObjects[objBroj]);
+                mObjectExists = true;
+            }
+            if (mObject.mObjectExist())
+            {
+                mObject.MoveDown();             
+            }
+            else
+            {
+                objBroj = rnd.Next(0, 7);
+                mObject = new MovingObject(tField, listOfObjects[objBroj]);
+            }
+            
 
         }
     }

@@ -14,6 +14,7 @@ namespace Tetris
         private TetrisObject tObject;
         private int row;
         private int column;
+        private bool mObjectExists;
 
         public MovingObject(TetrisField _tField, TetrisObject _tObject)
         {
@@ -21,6 +22,7 @@ namespace Tetris
             tObject = _tObject;
             row = 0;
             column = 4;
+            mObjectExists = true;
         }
 
         public bool IsObject(int _row, int _column) {
@@ -86,7 +88,12 @@ namespace Tetris
             else
             {
                 tField.PlaceObject(row, column, tObject);
+                mObjectExists = false;
             }
+        }
+        public bool mObjectExist()
+        {
+            return mObjectExists;
         }
         private bool CheckCollision(Position pos)
         {
