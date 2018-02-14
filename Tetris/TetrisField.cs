@@ -60,11 +60,9 @@ namespace Tetris
         
         public void PlaceObject(int row, int column, TetrisObject tObject)
         {
-            for (int i = 0; i < tObject.Size(0); ++i) {
-                for (int j = 0; j < tObject.Size(1); ++j) {
-                    if (tObject.GetColor(i,j) == Color.Yellow)
-                        this[row + i, column + j] = Color.Gray;
-                }
+            foreach (Point p in tObject)
+            {
+                this[p.X + row, p.Y + column] = Color.Gray;
             }
         }
 

@@ -14,7 +14,7 @@ namespace Tetris
         private TetrisObject tObject;
         private int row;
         private int column;
-        private bool mObjectExists;
+        public bool mObjectExists;
 
         public MovingObject(TetrisField _tField, TetrisObject _tObject)
         {
@@ -23,13 +23,15 @@ namespace Tetris
             row = 0;
             column = 4;
             mObjectExists = true;
+
+            InitialDraw();
         }
 
-        public bool IsObject(int _row, int _column) {
-            if ( _row - row < 0 || _row - row >= tObject.Size(0) || _column - column < 0 || _column - column >= tObject.Size(1))
-                return false;
-            if (tObject.GetColor(_row - row, _column - column) == Color.Yellow)
+        private bool InitialDraw()
+        {
+            if (row == 0 && column == 4 && CheckCollision(Position.SAME))
                 return true;
+            DrawObject();
             return false;
         }
 
@@ -45,62 +47,97 @@ namespace Tetris
         public TetrisObject Object
         {
             get { return tObject; }
-            set { tObject = value; }
+            set {
+                tObject = value;
+                if(InitialDraw())
+                    throw new Exception();
+            }
         }
 
         //Move left, right, down and rotations are shown with this
         //Call after checking all conditions for move
-        private void MoveObject()
+        private void ClearObject()
         {
-            int maxSize = tObject.Size(0);
-            if (maxSize < tObject.Size(1))
+            foreach (Point p in tObject)
             {
-                maxSize = tObject.Size(1);
+                tField[row + p.X, column + p.Y] = Color.Red;
             }
-            
-            for (int i = row - 1; i < row + maxSize + 1; i++)
-                for (int j = column - 1; j < column + maxSize + 1; j++)
-                {
-                    if (i >= 0 && i < tField.Size(0) && j >= 0 && j < tField.Size(1))
-                    {
-                        if (this.IsObject(i, j))
-                        {
-                            tField[i, j] = Color.Yellow;
-                        }
-                        else
-                        {
-                                if (tField[i, j] == Color.Yellow)
-                                    tField[i, j] = Color.Red;
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+        }
+        private void DrawObject() { 
+            foreach (Point p in tObject)
+            {
+                tField[row + p.X, column + p.Y] = Color.Yellow;
+            }
+        }
+
+        public void MoveToSide(Position pos)
+        {
+            if (!CheckCollision(pos))
+            {
+                this.ClearObject();
+                if (pos == Position.LEFT)
+                    column--;
+                else
+                    column++;
+                this.DrawObject();
+
+            }
         }
         public void MoveDown()
         {
             if(!CheckCollision(Position.DOWN))
             {
-                this.MoveObject();
+                this.ClearObject();
+                row++;
+                this.DrawObject();
+
             }
             else
             {
                 tField.PlaceObject(row, column, tObject);
                 mObjectExists = false;
+                row = 0;
+                column = 4;
             }
         }
         public bool mObjectExist()
         {
             return mObjectExists;
         }
+        public void Rotate(Position pos)
+        {
+            int moveToLeft = 1;
+            int rotate = 0;
+            if (pos == Position.ROTATEL)
+                rotate--;
+            else
+                rotate++;
+            if (!CheckCollision(pos))
+            {
+                this.ClearObject();
+                tObject.Rotate(rotate);
+                this.DrawObject();
+            }
+            else
+            {
+                while(moveToLeft < 3)
+                {
+                    if (!CheckCollision(Position.LEFT))
+                    {
+                        this.ClearObject();
+                        tObject.Rotate(rotate);
+                        column = column - moveToLeft;
+                        this.DrawObject();
+                        break;
+                    }
+                    moveToLeft++;
+                }
+            }
+        }
         private bool CheckCollision(Position pos)
         {
             int newRow = row;
             int newColumn = column;
-            TetrisObject newObject = new TetrisObject(tObject);
-            bool rotation = false;
             switch (pos)
             {
                 case Position.DOWN:
@@ -113,42 +150,22 @@ namespace Tetris
                     newColumn++;
                     break;
                 case Position.ROTATEL:
-                    newObject.RotateLeft();
-                    rotation = true;
-                    break;
-                case Position.ROTATER:
-                    newObject.RotateRight();
-                    rotation = true;
+                     tObject.Rotate(-1);
+                     break;
+                 case Position.ROTATER:
+                     tObject.Rotate(1);
+                     break;
+                default:
                     break;
             }
-            if (rotation)
+            foreach(Point p in tObject)
             {
-                if (newRow + newObject.Size(0) > tField.Size(0))
+                if (p.X + newRow >= tField.Size(0) || newColumn < 0 || newColumn + p.Y >= tField.Size(1))
                     return true;
-                if (newColumn + newObject.Size(1) > tField.Size(1))
-                {
-                    newColumn = newColumn + newObject.Size(1) - newObject.Size(0);
-                    if (newColumn < 0)
-                        return true;
-                    
-                }
+                if (tField[p.X + newRow, p.Y + newColumn] == Color.Gray)
+                    return true;
             }
-            if (newRow + newObject.Size(0) > tField.Size(0) || newColumn < 0 || newColumn + newObject.Size(1) >= tField.Size(1) )
-            {
-                return true;
-            }
-            for (int i = newObject.Size(0) - 1; i >= 0; i--)
-            {
-                for (int j = 0; j < newObject.Size(1); j++) {
-                    if(tField[newRow + i, newColumn + j] == Color.Gray && newObject.GetColor(i, j) == Color.Yellow)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            row = newRow;
-            column = newColumn;
+            
             return false;   
         }
     }

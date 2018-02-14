@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Tetris
 {
-    enum Position { DOWN, LEFT, RIGHT, ROTATER, ROTATEL };
+    enum Position { DOWN, LEFT, RIGHT, ROTATER, ROTATEL, SAME };
 }

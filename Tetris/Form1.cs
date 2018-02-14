@@ -17,7 +17,7 @@ namespace Tetris
         private TetrisField tField;
         private MovingObject mObject;
         private TetrisObject[] listOfObjects;
-        bool mObjectExists = false;
+        bool mObjectExists;
         int br = 0;
 
         public Form1()
@@ -32,6 +32,7 @@ namespace Tetris
             timer1.Enabled = true;
             
             //Tetris objects in a game, player can add new objects
+            //Stjepan: Forma ce ovo primati i prosljedivati tu listu MovingObject
             int[,] objekt1 = new int[,] { { 1, 1, 1 }, { 0, 0, 0 }, { 0, 0, 0 } };
             TetrisObject tObject1 = new TetrisObject(objekt1);
 
@@ -55,8 +56,10 @@ namespace Tetris
 
             listOfObjects = new TetrisObject[7] { tObject1,tObject2,tObject3,tObject4,tObject5,tObject6,tObject7};
 
+            mObject = new MovingObject(tField, listOfObjects[0]);
+            mObjectExists = true;
 
-
+            this.KeyDown += MoveObject;
         }
 
         private void CreateGrid()
@@ -83,13 +86,10 @@ namespace Tetris
             //change grid?
             
             //Ovo je jako glupo ali trenutno nemam bolju ideju
-            Random rnd = new Random();
-            int objBroj;
+            
             if(!mObjectExists)
             {
-                objBroj = rnd.Next(0, 7);
-                mObject = new MovingObject(tField, listOfObjects[objBroj]);
-                mObjectExists = true;
+                ChangeObject();
             }
             if (mObject.mObjectExist())
             {
@@ -97,11 +97,40 @@ namespace Tetris
             }
             else
             {
-                objBroj = rnd.Next(0, 7);
-                mObject = new MovingObject(tField, listOfObjects[objBroj]);
+                ChangeObject();
             }
-            
+        }
 
+        private void MoveObject(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.A) {
+                mObject.MoveToSide(Position.LEFT);
+            }
+            if (e.KeyCode == Keys.D)
+            {
+                mObject.MoveToSide(Position.RIGHT);
+            }
+            if (e.KeyCode == Keys.Q)
+            {
+                mObject.Rotate(Position.ROTATEL);
+            }
+            if (e.KeyCode == Keys.E)
+            {
+                mObject.Rotate(Position.ROTATER);
+            }
+        }
+        private void ChangeObject()
+        {
+            Random rnd = new Random();
+            int objBroj;
+            objBroj = rnd.Next(0, 7);
+            try {
+                mObject.Object = listOfObjects[objBroj];
+            }
+            catch(Exception e) {
+                timer1.Enabled = false;
+            }
+            mObject.mObjectExists = true;
         }
     }
 

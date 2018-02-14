@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,64 +9,45 @@ using System.Threading.Tasks;
 
 namespace Tetris
 {
-    public class TetrisObject
+    public class TetrisObject:IEnumerable<Point>
     {   
         //Yellow moving object, Red empty field
-        private Color[, ] matrix;
-        private int X = 0;
-        private int Y = 0;
+        private int[, ] matrix;
+        private List<List<Point>> rotationPoints;
+        private int rotation;
+
         public TetrisObject(int[ , ] _matrix)
         {
-            matrix = new Color[3, 3];
-            if (_matrix.GetLength(0) == 3 && _matrix.GetLength(0) == 3) {
-                for (int i = 0; i < 3; ++i) {
-                    for (int j = 0; j < 3; ++j) {
-                        if(_matrix[i, j] == 1)
-                            matrix[i, j] = Color.Yellow;
-                        else
-                            matrix[i, j] = Color.Red;
+            matrix = new int[3, 3];
+            matrix = _matrix;
+            this.Reposition();
+
+            rotationPoints = new List<List<Point>>();
+            List<Point> points;
+            for(int k = 0; k < 4; ++k)
+            {
+                if (k != 0)
+                    RotateMatrixRight();
+                points = new List<Point>();
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        if (matrix[i, j] == 1)
+                            points.Add(new Point(i, j));
                     }
                 }
+                rotationPoints.Add(points);
             }
-            this.Reposition();
-            
-            for (int i = 2; i >= 0; --i)
-            {
-                if (!this.IsNull(0, i) && Y == 0)
-                {
-                    Y = i + 1;
-                }
-                if (!this.IsNull(1, i) && X == 0)
-                {
-                    X = i + 1;
-                }
-            }
-            
-        }
-
-        public TetrisObject(TetrisObject tObject)
-        {
-            this.matrix = new Color[3, 3];
-
-            for (int i = 0; i < 3; ++i)
-            {
-                for (int j = 0; j < 3; ++j)
-                {
-                    this.matrix[i, j] = tObject.matrix[i, j];
-                }
-            }
-
-            this.X = tObject.X;
-            this.Y = tObject.Y;
-
+            rotation = 0;
         }
 
         private bool IsNull(int dimension, int row) {
             for (int i = 0; i < 3; ++i) {
-                if (dimension == 0 && matrix[i, row] != Color.Red) {
+                if (dimension == 0 && matrix[i, row] != 0) {
                     return false;   
                 }
-                if (dimension == 1 && matrix[row, i] != Color.Red)
+                if (dimension == 1 && matrix[row, i] != 0)
                 {
                     return false;
                 }
@@ -82,7 +64,7 @@ namespace Tetris
                     for (int j = 0; j < 2; ++j) {
                         matrix[i, j] = matrix[i, j + 1];
                     }
-                    matrix[i, 2] = Color.Red;
+                    matrix[i, 2] = 0;
                 }
             }
 
@@ -95,37 +77,19 @@ namespace Tetris
                     {
                         matrix[j, i] = matrix[j + 1, i];
                     }
-                    matrix[2, i] = Color.Red;
+                    matrix[2, i] = 0;
                 }
             }
         }
 
-        public void RotateLeft()
+        public void Rotate(int i)
         {
-            Color temp;
-            //elements in corners
-            temp = matrix[0, 0];
-            matrix[0, 0] = matrix[0, 2];
-            matrix[0, 2] = matrix[2, 2];
-            matrix[2, 2] = matrix[2, 0];
-            matrix[2, 0] = temp;
-            //others
-            temp = matrix[0, 1];
-            matrix[0, 1] = matrix[1, 2];
-            matrix[1, 2] = matrix[2, 1];
-            matrix[2, 1] = matrix[1, 0];
-            matrix[1, 0] = temp;
-
-            this.Reposition();
-
-            int t = X;
-            X = Y;
-            Y = t;
+            rotation = (rotation + i + 4) % 4;
         }
 
-        public void RotateRight()
+        private void RotateMatrixRight()
         {
-            Color temp;
+            int temp;
             //elements in corners
             temp = matrix[0, 0];
             matrix[0, 0] = matrix[2, 0];
@@ -140,20 +104,17 @@ namespace Tetris
             matrix[1, 2] = temp;
 
             this.Reposition();
-
-            int t = X;
-            X = Y;
-            Y = t;
         }
 
-        public int Size(int dimension) {
-            if (dimension == 0) return X;
-            if (dimension == 1) return Y;
-            return 0;
+        public IEnumerator<Point> GetEnumerator()
+        {
+            foreach (Point p in rotationPoints[rotation])
+                yield return p;
         }
 
-        public Color GetColor(int i, int j) {
-            return matrix[i, j];
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
