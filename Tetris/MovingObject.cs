@@ -95,6 +95,7 @@ namespace Tetris
             else
             {
                 tField.PlaceObject(row, column, tObject);
+                tField.ClearFullRows();
                 mObjectExists = false;
                 row = 0;
                 column = 4;
@@ -113,31 +114,45 @@ namespace Tetris
             else
                 rotate++;
             if (!CheckCollision(pos))
-            {
+            {  
                 this.ClearObject();
                 tObject.Rotate(rotate);
                 this.DrawObject();
             }
-            else
+            /*else
             {
-                while(moveToLeft < 3)
+            //kada je preblizu rubu da ga odmakne ako moze, treba prepravak
+                tObject.Rotate(rotate);
+                bool succRotation = false;
+
+                while (moveToLeft < 3)
                 {
                     if (!CheckCollision(Position.LEFT))
                     {
+                        column += moveToLeft-1;
+                        tObject.Rotate(-1*rotate);
                         this.ClearObject();
                         tObject.Rotate(rotate);
                         column = column - moveToLeft;
                         this.DrawObject();
+                        succRotation = true;
                         break;
                     }
+                    column--;
                     moveToLeft++;
                 }
-            }
+                if (!succRotation)
+                {
+                    tObject.Rotate(-rotate);
+                    column += moveToLeft - 1;
+                }
+            }*/
         }
         private bool CheckCollision(Position pos)
         {
             int newRow = row;
             int newColumn = column;
+            TetrisObject tetrisObject = new TetrisObject(tObject);
             switch (pos)
             {
                 case Position.DOWN:
@@ -150,15 +165,15 @@ namespace Tetris
                     newColumn++;
                     break;
                 case Position.ROTATEL:
-                     tObject.Rotate(-1);
-                     break;
+                    tetrisObject.Rotate(-1);
+                    break;
                  case Position.ROTATER:
-                     tObject.Rotate(1);
-                     break;
+                    tetrisObject.Rotate(1);
+                    break;
                 default:
                     break;
             }
-            foreach(Point p in tObject)
+            foreach(Point p in tetrisObject)
             {
                 if (p.X + newRow >= tField.Size(0) || newColumn < 0 || newColumn + p.Y >= tField.Size(1))
                     return true;

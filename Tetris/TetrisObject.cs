@@ -29,17 +29,27 @@ namespace Tetris
                 if (k != 0)
                     RotateMatrixRight();
                 points = new List<Point>();
+                Debug.WriteLine("Rotation: {0}", k);
                 for (int i = 0; i < 3; ++i)
                 {
                     for (int j = 0; j < 3; ++j)
                     {
-                        if (matrix[i, j] == 1)
+                        if (matrix[i, j] == 1) {
+                            Debug.WriteLine("i: {0} j: {1}", i, j);
                             points.Add(new Point(i, j));
+                        }
                     }
                 }
                 rotationPoints.Add(points);
             }
             rotation = 0;
+        }
+
+        public TetrisObject(TetrisObject tetrisObject)
+        {
+            matrix = tetrisObject.matrix;
+            rotationPoints = tetrisObject.rotationPoints;
+            rotation = tetrisObject.rotation;
         }
 
         private bool IsNull(int dimension, int row) {
@@ -85,6 +95,8 @@ namespace Tetris
         public void Rotate(int i)
         {
             rotation = (rotation + i + 4) % 4;
+            //Debug.WriteLine("{0}", rotation);
+
         }
 
         private void RotateMatrixRight()

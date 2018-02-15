@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Tetris
 
         public Form1()
         {
+            SuspendLayout();
             labelArray = new Label[20, 10];
             this.CreateGrid();
             tField = new TetrisField(ref labelArray);
@@ -58,7 +60,8 @@ namespace Tetris
 
             mObject = new MovingObject(tField, listOfObjects[0]);
             mObjectExists = true;
-
+            this.ClientSize = new Size(10*32 + 3*32 + 50, 32 * 20 + 1);
+            ResumeLayout();
             this.KeyDown += MoveObject;
         }
 
@@ -69,7 +72,7 @@ namespace Tetris
                 {
                     labelArray[i, j] = new Label();
                     labelArray[i, j].Size = new Size(30, 30);
-                    labelArray[i, j].Location = new Point(31 * j + 1, 31 * i + 1);
+                    labelArray[i, j].Location = new Point(32 * j + 1, 32 * i + 1);
                     this.Controls.Add(labelArray[i, j]);
                 }
         }
