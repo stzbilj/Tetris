@@ -119,34 +119,11 @@ namespace Tetris
                 tObject.Rotate(rotate);
                 this.DrawObject();
             }
-            /*else
+            else
             {
-            //kada je preblizu rubu da ga odmakne ako moze, treba prepravak
-                tObject.Rotate(rotate);
-                bool succRotation = false;
-
-                while (moveToLeft < 3)
-                {
-                    if (!CheckCollision(Position.LEFT))
-                    {
-                        column += moveToLeft-1;
-                        tObject.Rotate(-1*rotate);
-                        this.ClearObject();
-                        tObject.Rotate(rotate);
-                        column = column - moveToLeft;
-                        this.DrawObject();
-                        succRotation = true;
-                        break;
-                    }
-                    column--;
-                    moveToLeft++;
-                }
-                if (!succRotation)
-                {
-                    tObject.Rotate(-rotate);
-                    column += moveToLeft - 1;
-                }
-            }*/
+                //Tu bi trebao ici dio kada ga udaljava od zida ili objekta, npr kada je I uz sam zid treba column pomaknuti za dva mjesta ulijevo
+                //Razmisliti kako bi to trebalo raditi za sive blokove
+            }
         }
         private bool CheckCollision(Position pos)
         {
