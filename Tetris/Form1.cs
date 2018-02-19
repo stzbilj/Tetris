@@ -65,6 +65,28 @@ namespace Tetris
             this.KeyDown += MoveObject;
         }
 
+        public Form1(List<TetrisObject> listOfShapes)
+        {
+            SuspendLayout();
+            labelArray = new Label[20, 10];
+            this.CreateGrid();
+            tField = new TetrisField(ref labelArray);
+
+            this.BackColor = Color.Aqua;
+            this.Size = new Size(30 * 20, 30 * 30);
+            InitializeComponent();
+            timer1.Enabled = true;
+
+            listOfObjects = new TetrisObject[listOfShapes.Count];
+            listOfObjects = listOfShapes.ToArray();
+
+            mObject = new MovingObject(tField, listOfObjects[0]);
+            mObjectExists = true;
+            this.ClientSize = new Size(10 * 32 + 3 * 32 + 50, 32 * 20 + 1);
+            ResumeLayout();
+            this.KeyDown += MoveObject;
+        }
+
         private void CreateGrid()
         {
             for (int i = 0; i < labelArray.GetLength(0); i++)
@@ -79,9 +101,9 @@ namespace Tetris
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //Called perriodicly
+            //Called periodically
             //We change period depending on score, but not here
-            //It onley move object down
+            //It onely moves object down
             //if(mObject.MoveDown())
             //this.ShowMoveOfTheObject
             //else
@@ -90,10 +112,12 @@ namespace Tetris
             
             //Ovo je jako glupo ali trenutno nemam bolju ideju
             
-            if(!mObjectExists)
+            // Ana: zakomentirala sam sljedeci if, mislim da je suvisan 
+            /*if(!mObjectExists)
             {
                 ChangeObject();
-            }
+            }*/
+
             if (mObject.mObjectExist())
             {
                 mObject.MoveDown();             
@@ -121,12 +145,16 @@ namespace Tetris
             {
                 mObject.Rotate(Position.ROTATER);
             }
+            if(e.KeyCode == Keys.Down)
+            {
+                mObject.MoveDown();
+            }
         }
         private void ChangeObject()
         {
             Random rnd = new Random();
             int objBroj;
-            objBroj = rnd.Next(0, 7);
+            objBroj = rnd.Next(0, listOfObjects.Length);
             try {
                 mObject.Object = listOfObjects[objBroj];
             }

@@ -7,7 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -47,7 +46,11 @@
             this.Name = "Form1";
             this.Text = "Tetris";
             this.ResumeLayout(false);
+        }
 
+        private void Form1_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
 
         #endregion

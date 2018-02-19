@@ -52,6 +52,99 @@ namespace Tetris
             rotation = tetrisObject.rotation;
         }
 
+        // two object are equal if their matrices are equal (also when rotated)
+        public static bool operator ==(TetrisObject a, TetrisObject b)
+        {
+            int i = 0;
+            int j = 0;
+
+            /*Console.WriteLine("a");
+            for(i = 0; i < 3; ++i)
+            {
+                for (j = 0; j < 3; ++j)
+                    Console.Write(a.matrix[i, j] + " ");
+                Console.WriteLine();
+            }*/
+
+            //Console.WriteLine("b");
+            for (i = 0; i < 3; ++i)
+            {
+                for (j = 0; j < 3; ++j)
+                {
+                    //Console.Write(b.matrix[i, j] + " ");
+                    if (a.matrix[i, j] != b.matrix[i, j])
+                        break;
+                }
+
+                if (j < 3)
+                    break;
+                //Console.WriteLine();
+            }
+
+            if (i == 3)
+                return true;
+            //Console.WriteLine();
+            //Console.WriteLine();
+
+            /*if (a.matrix == b.matrix)
+                return true;*/
+
+            for (int k = 0; k < 4; ++k)
+            {
+                a.RotateMatrixRight();
+                //Console.WriteLine("Rotated " + k + ":");
+                //Console.WriteLine("a");
+                /*for (i = 0; i < 3; ++i)
+                {
+                    for (j = 0; j < 3; ++j)
+                        Console.Write(a.matrix[i, j] + " ");
+                    Console.WriteLine();
+                }*/
+                //Console.WriteLine("b");
+                for (i = 0; i < 3; ++i)
+                {
+                    for (j = 0; j < 3; ++j)
+                    {
+                        //Console.Write(b.matrix[i, j] + " ");
+                        if (a.matrix[i, j] != b.matrix[i, j])
+                            break;
+                    }
+
+                    if (j < 3)
+                        break;
+                    //Console.WriteLine();
+                }
+                //Console.WriteLine();
+                //Console.WriteLine();
+                //if (a.matrix == b.matrix)
+                if(i == 3)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool operator !=(TetrisObject a, TetrisObject b)
+        {
+            if (a == b)
+                return false;
+
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is TetrisObject))
+                return false;
+
+            return this == (TetrisObject)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         private bool IsNull(int dimension, int row) {
             for (int i = 0; i < 3; ++i) {
                 if (dimension == 0 && matrix[i, row] != 0) {

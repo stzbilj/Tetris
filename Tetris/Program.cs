@@ -17,7 +17,7 @@ namespace Tetris
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //ovdje se moze napraviti kontrola?
-            Application.Run(new Form1());
+            Application.Run(new Form2());
         }
     }
 }
