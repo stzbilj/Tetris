@@ -12,27 +12,28 @@ namespace Tetris
     {
         private TetrisField tField;
         private TetrisObject tObject;
+        private TetrisObject nextObject;
+        private GameScore game;
         private int row;
         private int column;
-        public bool mObjectExists;
-
-        public MovingObject(TetrisField _tField, TetrisObject _tObject)
+        
+        public MovingObject(TetrisField _tField, TetrisObject _tObject, TetrisObject _nextObject, GameScore _game)
         {
             tField = _tField;
             tObject = _tObject;
+            nextObject = _nextObject;
+            game = _game;
             row = 0;
             column = 4;
-            mObjectExists = true;
-
             InitialDraw();
         }
 
         private bool InitialDraw()
         {
             if (row == 0 && column == 4 && CheckCollision(Position.SAME))
-                return true;
+                return false;
             DrawObject();
-            return false;
+            return true;
         }
 
         public int Row{
@@ -46,16 +47,12 @@ namespace Tetris
 
         public TetrisObject Object
         {
-            get { return tObject; }
+            get { return nextObject; }
             set {
-                tObject = value;
-                if(InitialDraw())
-                    throw new Exception();
+                nextObject = value;
             }
         }
-
-        //Move left, right, down and rotations are shown with this
-        //Call after checking all conditions for move
+        
         private void ClearObject()
         {
             foreach (Point p in tObject)
@@ -63,6 +60,7 @@ namespace Tetris
                 tField[row + p.X, column + p.Y] = Color.Red;
             }
         }
+
         private void DrawObject() { 
             foreach (Point p in tObject)
             {
@@ -83,28 +81,31 @@ namespace Tetris
 
             }
         }
-        public void MoveDown()
+
+        public bool MoveDown()
         {
             if(!CheckCollision(Position.DOWN))
             {
                 this.ClearObject();
                 row++;
                 this.DrawObject();
-
+                return true;
             }
             else
             {
                 tField.PlaceObject(row, column, tObject);
-                tField.ClearFullRows();
-                mObjectExists = false;
+                game.Score = tField.ClearFullRows();
                 row = 0;
                 column = 4;
+                tObject = nextObject;
+                if (!InitialDraw())
+                {
+                    game.EndGame();
+                }
+                return false;
             }
         }
-        public bool mObjectExist()
-        {
-            return mObjectExists;
-        }
+
         public void Rotate(Position pos)
         {
             int moveToLeft = 1;
