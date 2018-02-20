@@ -73,7 +73,10 @@ namespace Tetris
         {
             SuspendLayout();
             labelArray = new Label[20, 10];
+            labelScore = new Label();
+            labelArrayNext = new Label[3, 3];
             this.CreateGrid();
+            this.CreateHelp();
             tField = new TetrisField(ref labelArray);
 
             this.BackColor = Color.Aqua;
