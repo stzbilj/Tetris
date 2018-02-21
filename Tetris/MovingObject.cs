@@ -16,6 +16,7 @@ namespace Tetris
         private GameScore game;
         private int row;
         private int column;
+        public int goldenPoints;
         
         public MovingObject(TetrisField _tField, TetrisObject _tObject, TetrisObject _nextObject, GameScore _game)
         {
@@ -25,6 +26,7 @@ namespace Tetris
             game = _game;
             row = 0;
             column = 4;
+            goldenPoints = 0;
             InitialDraw();
         }
 
@@ -94,7 +96,10 @@ namespace Tetris
             else
             {
                 tField.PlaceObject(row, column, tObject);
-                game.Score = tField.ClearFullRows();
+                game.Score = tField.ClearFullRows().Item1;
+                game.Bonus = tField.ClearFullRows().Item2;
+                while (game.Score / game.Level >= 1000)
+                    game.Level = game.Level + 1;
                 row = 0;
                 column = 4;
                 tObject = nextObject;
@@ -153,9 +158,12 @@ namespace Tetris
             }
             foreach(Point p in tetrisObject)
             {
+
                 if (p.X + newRow >= tField.Size(0) || newColumn < 0 || newColumn + p.Y >= tField.Size(1))
                     return true;
-                if (tField[p.X + newRow, p.Y + newColumn] == Color.Gray)
+                if (tField[p.X + newRow, p.Y + newColumn] == Color.Gold)
+                    goldenPoints += 1;
+                if (tField[p.X + newRow, p.Y + newColumn] == Color.Gray || tField[p.X + newRow, p.Y + newColumn] == Color.Black)
                     return true;
             }
             

@@ -46,7 +46,29 @@ namespace Tetris
             }
             return true;
         }
-        
+
+        private int CountBlack(int row)
+        {
+            int br = 0;
+            for (int i = 0; i < labelArray.GetLength(1); ++i)
+            {
+                if (this[row, i] == Color.Black)
+                    br++;
+            }
+            return br;
+        }
+
+        private int CountGold(int row)
+        {
+            int br = 0;
+            for (int i = 0; i < labelArray.GetLength(1); ++i)
+            {
+                if (this[row, i] == Color.Gold)
+                    br++;
+            }
+            return br;
+        }
+
         private int CountGray(int row)
         {
             int br = 0;
@@ -67,16 +89,23 @@ namespace Tetris
         }
 
         //@return int (helps to calculate score)
-        public int ClearFullRows() {
+        public Tuple<int, int> ClearFullRows() {
             int num = 0;
+            int bonus = 0;
+            int goldenPoints = 0;
             int numG;
+            int numB;
+            int numGold;
             for (int i = labelArray.GetLength(0) - 1; i >= 0; i--) {
                 numG = this.CountGray(i);
-                if (numG == labelArray.GetLength(1)) {
+                numB = this.CountBlack(i);
+                numGold = this.CountGold(i);
+                if (numG + numB + numGold == labelArray.GetLength(1)) {
                     num++;
+                    bonus++;
                 }
                 else {
-                    if (numG == 0) {
+                    if (numG + numB + numGold == 0) {
                         for (int j = i + 1; j <= i + num; j++) {
                             for (int k = 0; k < labelArray.GetLength(1); ++k) {
                                 if(this[j, k] != Color.Yellow)
@@ -93,7 +122,7 @@ namespace Tetris
                     }
                 }
             }
-            return num;
+            return new Tuple<int, int>(num, bonus);
         }
 
         public int Size(int dimension)

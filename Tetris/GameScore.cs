@@ -11,6 +11,8 @@ namespace Tetris
     class GameScore
     {
         private int score;
+        private int level;
+        private int bonus;
         private Timer timer;
         private bool gameOver;
 
@@ -18,19 +20,43 @@ namespace Tetris
         {
             timer = _timer;
             score = 0;
+            level = 1;
+            bonus = 0;
             gameOver = false;
-    }
+        }
 
         public int Score
         {
             get { return score; }
             set
             {
-                if(value > 0)
+                if (value > 0)
                 {
                     score += 100 * value + 100 * (value - 1);
-                    if( (score/500) < 10)
-                        timer.Interval = 1000 - 90 *(score/500) ;
+                    if ((score / 1000) < 10)
+                        timer.Interval = 1000 - 90 * Level - 60;
+                }
+            }
+        }
+
+        public int Level
+        {
+            get { return level; }
+            set
+            {
+                if (value > 0)
+                    level = value;
+            }
+        }
+
+        public int Bonus
+        {
+            get { return bonus; }
+            set
+            {
+                if(value > 0)
+                {
+                    bonus += value * 500;
                 }
             }
         }

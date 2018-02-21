@@ -15,17 +15,31 @@ namespace Tetris
     {
         private Label[,] labelArray;
         private Label labelScore;
+        private Label labelLevel;
         private Label[,] labelArrayNext;
+        private Label goldenPts = new Label();
         private TetrisField tField;
         private MovingObject mObject;
         private TetrisObject[] listOfObjects;
         private GameScore game;
 
-        public Form1()
+        private bool addObstacles;
+        private bool addGoldenPoints;
+        private bool blackFieldAdded;
+
+        private int goldenPointsInterval;
+
+        public Form1(bool _addObstacles = false, bool _addGoldenPoints = false)
         {
             SuspendLayout();
+            addObstacles = _addObstacles;
+            addGoldenPoints = _addGoldenPoints;
+            blackFieldAdded = false;
+            Random rnd = new Random();
+            goldenPointsInterval = rnd.Next(15, 50);
             labelArray = new Label[20, 10];
             labelScore = new Label();
+            labelLevel = new Label();
             labelArrayNext = new Label[3, 3];
             this.CreateGrid();
             this.CreateHelp();
@@ -34,7 +48,8 @@ namespace Tetris
             this.BackColor = Color.Aqua;
             InitializeComponent();
             game = new GameScore(ref timer1);
-            labelScore.Text = game.Score.ToString();
+            labelScore.Text = "Score: " + game.Score.ToString();
+            labelLevel.Text = "Level: " + game.Level.ToString();
             //Tetris objects in a game, player can add new objects
             //Stjepan: Forma ce ovo primati i prosljedivati tu listu MovingObject
             int[,] objekt1 = new int[,] { { 1, 1, 1 }, { 0, 0, 0 }, { 0, 0, 0 } };
@@ -69,12 +84,21 @@ namespace Tetris
             game.Start();
         }
 
-        public Form1(List<TetrisObject> listOfShapes)
+        public Form1(List<TetrisObject> listOfShapes, bool _addObstacles = false, bool _addGoldenPoints = false)
         {
             SuspendLayout();
+            addObstacles = _addObstacles;
+            addGoldenPoints = _addGoldenPoints;
+            blackFieldAdded = false;
+            Random rnd = new Random();
+            goldenPointsInterval = rnd.Next(15, 50);
             labelArray = new Label[20, 10];
             labelScore = new Label();
+            labelLevel = new Label();
             labelArrayNext = new Label[3, 3];
+            game = new GameScore(ref timer1);
+            labelScore.Text = "Score: " + game.Score.ToString();
+            labelLevel.Text = "Level: " + game.Level.ToString();
             this.CreateGrid();
             this.CreateHelp();
             tField = new TetrisField(ref labelArray);
@@ -95,6 +119,34 @@ namespace Tetris
             game.Start();
         }
 
+        private int repeated = 0;
+        private void findNewColoredField(Color color)
+        {
+            Random rnd = new Random();
+            int x1 = rnd.Next(4, 19);
+            int y1 = rnd.Next(0, 9);
+            if (tField[x1, y1] == Color.Red)
+            {
+                tField[x1, y1] = color;
+                blackFieldAdded = true;
+            }
+            //MessageBox.Show("Black added to " + x1 + " " + y1);
+            else
+            {
+                if (repeated < 1000)
+                {
+                    findNewColoredField(color);
+                    repeated++;
+                }
+
+                else
+                {
+                    repeated = 0;
+                    return;
+                }
+            }
+        }
+
         private void CreateGrid()
         {
             for (int i = 0; i < labelArray.GetLength(0); i++)
@@ -110,12 +162,17 @@ namespace Tetris
 
         private void CreateHelp()
         {
-            labelScore = new Label();
+            //labelScore = new Label();
             labelScore.Size = new Size(94, 30);
             labelScore.Location = new Point(32 * labelArray.GetLength(1) + 25, 33);
             this.Controls.Add(labelScore);
             labelScore.TextAlign = ContentAlignment.MiddleCenter;
             labelScore.BackColor = Color.Brown;
+            labelLevel.Size = new Size(94, 30);
+            labelLevel.Location = new Point(32 * labelArray.GetLength(1) + 25, 62);
+            this.Controls.Add(labelLevel);
+            labelLevel.BackColor = Color.Brown;
+            labelLevel.TextAlign = ContentAlignment.MiddleCenter; 
             for (int i = 0; i < labelArrayNext.GetLength(0); i++)
                 for (int j = 0; j < labelArrayNext.GetLength(1); j++)
                 {
@@ -125,6 +182,16 @@ namespace Tetris
                     this.Controls.Add(labelArrayNext[i, j]);
                     labelArrayNext[i, j].BackColor = Color.Brown;
                 }
+
+            if (addGoldenPoints)
+            {
+                goldenPts.Text = "Golden: 0";
+                goldenPts.Size = new Size(94, 30);
+                this.Controls.Add(goldenPts);
+                goldenPts.Location = new Point(32 * labelArray.GetLength(1) + 25, 250);
+                goldenPts.BackColor = Color.Brown;
+                goldenPts.TextAlign = ContentAlignment.MiddleCenter;
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -136,7 +203,9 @@ namespace Tetris
         {
             if (!mObject.MoveDown())
             {
-                labelScore.Text = game.Score.ToString();
+                labelScore.Text = "Score: " + game.Score.ToString();
+                labelLevel.Text = "Level: " + game.Level.ToString();
+                goldenPts.Text = "Golden: " + mObject.goldenPoints.ToString();
                 if (game.GameOver)
                 {
                     //poziva se dialog za high score
@@ -145,6 +214,34 @@ namespace Tetris
                 }
                 else
                 {
+                    // addObstacles is true if the checBox 'Add obsticles' was checked
+                    // if addObstacles is true, then check if the black field has already been added at this level
+                    if (addObstacles && (game.Level % 2 == 0))
+                    {
+                        if (!blackFieldAdded)
+                        {
+                            findNewColoredField(Color.Black);
+                        }
+                    }
+                    else
+                        blackFieldAdded = false;
+
+                    // addGoldenPoints is true if the checkBox 'Add golden points' was checked
+                    // if addGoldenPoints is true, pick a random time interval to add next golden field
+                    if (addGoldenPoints)
+                    {
+                        if(goldenPointsInterval == 0)
+                        {
+                            findNewColoredField(Color.Gold);
+                            Random rnd = new Random();
+                            goldenPointsInterval = rnd.Next(15, 50);
+                        }
+                        else
+                        {
+                            goldenPointsInterval -= 1;
+                        }
+                    }
+
                     mObject.Object = new TetrisObject(listOfObjects[GetRandomNumber()]);
                     ShowNextObject();
                 }

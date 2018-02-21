@@ -25,6 +25,9 @@ namespace Tetris
         CheckBox checkbox6 = new CheckBox();
         CheckBox checkbox7 = new CheckBox();
 
+        CheckBox addObstacles = new CheckBox();
+        CheckBox addGoldenPoints = new CheckBox();
+
         Button buttonContinue = new Button();
         Button addingButton = new Button();
         Button play = new Button();
@@ -56,7 +59,7 @@ namespace Tetris
             checkbox.Size = new Size(15, 14);
             groupBox1.Controls.Add(checkbox);
             checkbox.Location = new Point(x, y);
-            checkbox.Show();
+            //checkbox.Show();
         }
 
         private bool addToShapes(int[,] newShape, bool checkEquals = false)
@@ -84,7 +87,7 @@ namespace Tetris
                 shapesChosen += 1;
                 setExplanation();
 
-                if (shapesChosen == 8)
+                if (shapesChosen == 7)
                 {
                     play.Enabled = true;
                 }
@@ -101,7 +104,7 @@ namespace Tetris
         // the method sets text to the textbox in groupBox2, depending on the number of chosen shapes
         private void setExplanation()
         {
-            explanationsBox.Text = "To start a game, you need 8 - 10 shapes.";
+            explanationsBox.Text = "To start a game, you need 7 - 10 shapes.";
             explanationsBox.AppendText(Environment.NewLine);
             explanationsBox.AppendText("You have " + shapesChosen + " shapes at the moment.");
         }
@@ -239,7 +242,9 @@ namespace Tetris
 
         private void playButtonClicked(object sender, EventArgs e)
         {
-            Form1 game = new Form1(listOfShapes);
+            bool addObs = addObstacles.Checked;
+            bool addPts = addGoldenPoints.Checked;
+            Form1 game = new Form1(listOfShapes, addObs, addPts);
             game.ShowDialog();
         }
 
@@ -350,10 +355,22 @@ namespace Tetris
             addingButton.Text = "Add";
             addingButton.Click += new EventHandler(addingButtonClicked);
 
+            // groupBox4
+            addObstacles.Size = new Size(150, 20);
+            addObstacles.Text = "Add obstacles";
+            //addObstacles.TextAlign = ContentAlignment.TopCenter;
+            groupBox4.Controls.Add(addObstacles);
+            addObstacles.Location = new Point(100, 50);
+
+            addGoldenPoints.Size = new Size(150, 20);
+            addGoldenPoints.Text = "Add golden points";
+            groupBox4.Controls.Add(addGoldenPoints);
+            addGoldenPoints.Location = new Point(300, 50);
+        
             // button to start the game
-            play.Size = new Size(543, 40);
+            play.Size = new Size(542, 40);
             this.Controls.Add(play);
-            play.Location = new Point(0, 400);
+            play.Location = new Point(1, 516);
             play.Text = "Play";
             play.Enabled = false;
             play.Click += new EventHandler(playButtonClicked);
