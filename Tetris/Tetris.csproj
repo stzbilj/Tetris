@@ -50,6 +50,12 @@
     <Compile Include="CustomiseGame.Designer.cs">
       <DependentUpon>CustomiseGame.cs</DependentUpon>
     </Compile>
+    <Compile Include="FinishForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FinishForm.Designer.cs">
+      <DependentUpon>FinishForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +68,7 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game.cs" />
     <Compile Include="GameScore.cs" />
     <Compile Include="MovingObject.cs" />
     <Compile Include="Position.cs" />
@@ -71,6 +78,9 @@
     <Compile Include="TetrisObject.cs" />
     <EmbeddedResource Include="CustomiseGame.resx">
       <DependentUpon>CustomiseGame.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FinishForm.resx">
+      <DependentUpon>FinishForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
