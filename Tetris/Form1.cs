@@ -22,6 +22,7 @@ namespace Tetris
         private MovingObject mObject;
         private TetrisObject[] listOfObjects;
         private GameScore game;
+        private Game newGame;
 
         private bool addObstacles;
         private bool addGoldenPoints;
@@ -74,6 +75,8 @@ namespace Tetris
             TetrisObject tObject7 = new TetrisObject(objekt7);
 
             listOfObjects = new TetrisObject[7] { tObject1,tObject2,tObject3,tObject4,tObject5,tObject6,tObject7};
+            List<TetrisObject> list = new List<TetrisObject>() { tObject1, tObject2, tObject3, tObject4, tObject5, tObject6, tObject7 };
+            newGame = new Game(list);
 
             mObject = new MovingObject(tField, new TetrisObject(listOfObjects[GetRandomNumber()]), new TetrisObject(listOfObjects[GetRandomNumber()]), game);
             this.ClientSize = new Size(10*32 + 3*32 + 50, 32 * 20 + 1);
@@ -109,6 +112,7 @@ namespace Tetris
 
             listOfObjects = new TetrisObject[listOfShapes.Count];
             listOfObjects = listOfShapes.ToArray();
+            newGame = new Game(listOfShapes, _addObstacles, _addGoldenPoints);
             
             mObject = new MovingObject(tField, new TetrisObject(listOfObjects[GetRandomNumber()]), new TetrisObject(listOfObjects[GetRandomNumber()]), game);
             this.ClientSize = new Size(10 * 32 + 3 * 32 + 50, 32 * 20 + 1);
@@ -201,7 +205,9 @@ namespace Tetris
                 {
                     //poziva se dialog za high score
                     String s = "Kraj: " + game.Score + " Interval: " + timer1.Interval;
-                    MessageBox.Show(s);
+                    //MessageBox.Show(s);
+                    FinishForm f3 = new FinishForm(game.Score.ToString(), newGame);
+                    f3.ShowDialog();
                 }
                 else
                 {

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Tetris
 {
+    [Serializable]
     public class TetrisObject:IEnumerable<Point>
     {   
         //Yellow moving object, Red empty field
