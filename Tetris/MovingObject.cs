@@ -113,22 +113,20 @@ namespace Tetris
 
         public void Rotate(Position pos)
         {
-            int moveToLeft = 1;
             int rotate = 0;
             if (pos == Position.ROTATEL)
                 rotate--;
             else
                 rotate++;
             if (!CheckCollision(pos))
-            {  
+            {
                 this.ClearObject();
                 tObject.Rotate(rotate);
+                if (tObject.Size(1) + column >= tField.Size(1))
+                {
+                    column = tField.Size(1) - tObject.Size(1);
+                }
                 this.DrawObject();
-            }
-            else
-            {
-                //Tu bi trebao ici dio kada ga udaljava od zida ili objekta, npr kada je I uz sam zid treba column pomaknuti za dva mjesta ulijevo
-                //Razmisliti kako bi to trebalo raditi za sive blokove
             }
         }
         private bool CheckCollision(Position pos)
@@ -149,9 +147,17 @@ namespace Tetris
                     break;
                 case Position.ROTATEL:
                     tetrisObject.Rotate(-1);
+                    if (tetrisObject.Size(1) + newColumn  >= tField.Size(1))
+                    {
+                        newColumn = tField.Size(1) - tetrisObject.Size(1);
+                    }
                     break;
                  case Position.ROTATER:
                     tetrisObject.Rotate(1);
+                    if (tetrisObject.Size(1) + newColumn >= tField.Size(1))
+                    {
+                        newColumn = tField.Size(1) - tetrisObject.Size(1);
+                    }
                     break;
                 default:
                     break;

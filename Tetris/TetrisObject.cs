@@ -15,6 +15,8 @@ namespace Tetris
         private int[, ] matrix;
         private List<List<Point>> rotationPoints;
         private int rotation;
+        private int x;
+        private int y;
 
         public TetrisObject(int[ , ] _matrix)
         {
@@ -22,6 +24,20 @@ namespace Tetris
             matrix = _matrix;
             this.Reposition();
 
+            x = 0;
+            y = 0;
+            for (int i = 2; i >= 0; --i)
+            {
+                if (!this.IsNull(0, i) && y == 0)
+                {
+                    y = i + 1;
+                }
+                if (!this.IsNull(1, i) && x == 0)
+                {
+                    x = i + 1;
+                }
+            }
+            
             rotationPoints = new List<List<Point>>();
             List<Point> points;
             for(int k = 0; k < 4; ++k)
@@ -29,13 +45,11 @@ namespace Tetris
                 if (k != 0)
                     RotateMatrixRight();
                 points = new List<Point>();
-                Debug.WriteLine("Rotation: {0}", k);
                 for (int i = 0; i < 3; ++i)
                 {
                     for (int j = 0; j < 3; ++j)
                     {
                         if (matrix[i, j] == 1) {
-                            Debug.WriteLine("i: {0} j: {1}", i, j);
                             points.Add(new Point(i, j));
                         }
                     }
@@ -49,6 +63,8 @@ namespace Tetris
         {
             matrix = tetrisObject.matrix;
             rotationPoints = tetrisObject.rotationPoints;
+            x = tetrisObject.x;
+            y = tetrisObject.y;
             rotation = tetrisObject.rotation;
         }
 
@@ -188,8 +204,6 @@ namespace Tetris
         public void Rotate(int i)
         {
             rotation = (rotation + i + 4) % 4;
-            //Debug.WriteLine("{0}", rotation);
-
         }
 
         private void RotateMatrixRight()
@@ -221,5 +235,14 @@ namespace Tetris
         {
             return GetEnumerator();
         }
+        
+        public int Size(int dimension)
+        {
+            int mod = rotation % 2;
+            if (dimension == mod  ) return x;
+            if ( dimension != mod ) return y;
+            return 0;
+        }
+
     }
 }
