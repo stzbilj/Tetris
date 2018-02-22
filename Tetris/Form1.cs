@@ -28,6 +28,8 @@ namespace Tetris
         private bool addGoldenPoints;
         private bool blackFieldAdded;
 
+        private Tuple<int, int> goldenPosition;
+
         private int goldenPointsInterval;
 
         public Form1(bool _addObstacles = false, bool _addGoldenPoints = false)
@@ -80,6 +82,9 @@ namespace Tetris
 
             mObject = new MovingObject(tField, new TetrisObject(listOfObjects[GetRandomNumber()]), new TetrisObject(listOfObjects[GetRandomNumber()]), game);
             this.ClientSize = new Size(10*32 + 3*32 + 50, 32 * 20 + 1);
+
+            goldenPosition = new Tuple<int, int>(0, 0);
+
             ShowNextObject();
             ResumeLayout();
             this.KeyDown += MoveObject;
@@ -116,6 +121,9 @@ namespace Tetris
             
             mObject = new MovingObject(tField, new TetrisObject(listOfObjects[GetRandomNumber()]), new TetrisObject(listOfObjects[GetRandomNumber()]), game);
             this.ClientSize = new Size(10 * 32 + 3 * 32 + 50, 32 * 20 + 1);
+
+            goldenPosition = new Tuple<int, int>(0, 0);
+
             ShowNextObject();
             ResumeLayout();
             this.KeyDown += MoveObject;
@@ -123,8 +131,7 @@ namespace Tetris
             game.Start();
         }
 
-        private int repeated = 0;
-        private void findNewColoredField(Color color)
+        private Tuple<int, int> findNewColoredField(Color color)
         {
 
             for(int i = 0; i < 1000; ++i)
@@ -137,9 +144,11 @@ namespace Tetris
                 {
                     tField[x1, y1] = color;
                     blackFieldAdded = true;
-                    return;
+                    return new Tuple<int, int>(x1, y1);
                 }
             }
+
+            return new Tuple<int, int>(0, 0);
         }
 
         private void CreateGrid()
@@ -227,11 +236,15 @@ namespace Tetris
                     // if addGoldenPoints is true, pick a random time interval to add next golden field
                     if (addGoldenPoints)
                     {
+                        if (goldenPosition.Item1 != 0)
+                            tField[goldenPosition.Item1, goldenPosition.Item2] = Color.Red;
                         if(goldenPointsInterval == 0)
                         {
-                            findNewColoredField(Color.Gold);
+                            Tuple<int, int> temp = findNewColoredField(Color.Gold);
+                            //findNewColoredField(Color.Gold);
+                            goldenPosition = new Tuple<int, int>(temp.Item1, temp.Item2);
                             Random rnd = new Random();
-                            goldenPointsInterval = rnd.Next(15, 50);
+                            goldenPointsInterval = rnd.Next(15, 30);
                         }
                         else
                         {
