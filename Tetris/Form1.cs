@@ -122,26 +122,17 @@ namespace Tetris
         private int repeated = 0;
         private void findNewColoredField(Color color)
         {
-            Random rnd = new Random();
-            int x1 = rnd.Next(4, 19);
-            int y1 = rnd.Next(0, 9);
-            if (tField[x1, y1] == Color.Red)
-            {
-                tField[x1, y1] = color;
-                blackFieldAdded = true;
-            }
-            //MessageBox.Show("Black added to " + x1 + " " + y1);
-            else
-            {
-                if (repeated < 1000)
-                {
-                    findNewColoredField(color);
-                    repeated++;
-                }
 
-                else
+            for(int i = 0; i < 1000; ++i)
+            {
+                Random rnd = new Random();
+                int x1 = rnd.Next(4, 19);
+                int y1 = rnd.Next(0, 9);
+
+                if (tField[x1, y1] == Color.Red)
                 {
-                    repeated = 0;
+                    tField[x1, y1] = color;
+                    blackFieldAdded = true;
                     return;
                 }
             }
@@ -241,6 +232,7 @@ namespace Tetris
                             goldenPointsInterval -= 1;
                         }
                     }
+                    goldenPts.Text = "Golden: " + mObject.goldenPoints.ToString();
 
                     mObject.Object = new TetrisObject(listOfObjects[GetRandomNumber()]);
                     ShowNextObject();

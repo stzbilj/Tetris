@@ -168,7 +168,9 @@ namespace Tetris
                 if (p.X + newRow >= tField.Size(0) || newColumn < 0 || newColumn + p.Y >= tField.Size(1))
                     return true;
                 if (tField[p.X + newRow, p.Y + newColumn] == Color.Gold)
+                {
                     goldenPoints += 1;
+                }
                 if (tField[p.X + newRow, p.Y + newColumn] == Color.Gray || tField[p.X + newRow, p.Y + newColumn] == Color.Black)
                     return true;
             }

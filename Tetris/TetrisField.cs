@@ -92,7 +92,6 @@ namespace Tetris
         public Tuple<int, int> ClearFullRows() {
             int num = 0;
             int bonus = 0;
-            int goldenPoints = 0;
             int numG;
             int numB;
             int numGold;
