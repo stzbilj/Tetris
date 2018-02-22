@@ -51,9 +51,13 @@ namespace Tetris
             if (gamesAlreadyPlayed.Contains(game))
             {
                 idOfGame = gamesAlreadyPlayed.IndexOf(game) + 1;
-                scoreFilePath = Path.GetFullPath("..\\..\\data") + "\\scores\\" + idOfGame.ToString() + ".bin";
-                listOfScores = ReadFromBinaryFile<List<KeyValuePair<string, int>>>(scoreFilePath);
-                showListOfScores();
+                scoreFilePath = Path.GetFullPath("..\\..\\data") + "\\scores\\" + idOfGame.ToString()+ ".bin";
+                if(File.Exists(scoreFilePath))
+                {
+                    listOfScores = ReadFromBinaryFile<List<KeyValuePair<string, int>>>(scoreFilePath);
+                    showListOfScores();
+                }
+                
             }
             else
             {
@@ -124,6 +128,21 @@ namespace Tetris
             saveBtn.Enabled = false;
             showListOfScores();
             WriteToBinaryFile<List<KeyValuePair<string, int>>>(scoreFilePath, listOfScores);
+        }
+
+        private void FinishForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to exit?","Tetris",
+            MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                Application.Exit();
+                   
+            }
+            else
+            {
+                e.Cancel = true;
+                
+            }
         }
     }
 }

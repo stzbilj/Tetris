@@ -1,0 +1,248 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Tetris
+{
+    public partial class ParallelGame : Form
+    {
+        private Label[,] labelArray1;
+        private Label[,] labelArray2;
+        private Label labelScore;
+        private Label labelLevel;
+        private Label[,] labelArrayNext1;
+        private Label[,] labelArrayNext2;
+        private TetrisField tField1;
+        private TetrisField tField2;
+        private MovingObject mObject1;
+        private MovingObject mObject2;
+        private MovingObject mObjectFocus;
+        private TetrisObject[] listOfObjects;
+        private GameScore game;
+        private Game newGame;
+        private bool flag;
+
+        public ParallelGame(List<TetrisObject> listOfShapes)
+        {
+
+            SuspendLayout();
+
+            Random rnd = new Random();
+
+            labelArray1 = new Label[20, 10];
+            labelArray2 = new Label[20, 10];
+
+            labelScore = new Label();
+            labelLevel = new Label();
+
+            labelArrayNext1 = new Label[3, 3];
+            labelArrayNext2 = new Label[3, 3];
+
+            game = new GameScore(ref timer1);
+            labelScore.Text = "Score: " + game.Score.ToString();
+            labelLevel.Text = "Level: " + game.Level.ToString();
+
+            this.CreateGrid();
+
+            this.CreateHelp();
+            tField1 = new TetrisField(ref labelArray1);
+            tField2 = new TetrisField(ref labelArray2);
+
+
+            this.BackColor = Color.Aqua;
+            InitializeComponent();
+            game = new GameScore(ref timer1);
+
+            listOfObjects = new TetrisObject[listOfShapes.Count];
+            listOfObjects = listOfShapes.ToArray();
+            newGame = new Game(listOfShapes, false, false, true);
+
+            mObject1 = new MovingObject(tField1, new TetrisObject(listOfObjects[GetRandomNumber()]), new TetrisObject(listOfObjects[GetRandomNumber()]), game);
+            mObject2 = new MovingObject(tField2, new TetrisObject(listOfObjects[GetRandomNumber()]), new TetrisObject(listOfObjects[GetRandomNumber()]), game);
+
+            this.ClientSize = new Size(10 * 32 + 3 * 32 + 50 + 10 * 32, 32 * 20 + 1);
+
+            mObjectFocus = mObject1;
+            flag = true;
+
+
+            ShowNextObject();
+            ResumeLayout();
+            this.KeyDown += MoveObject;
+
+            game.Start();
+        }
+
+        private int GetRandomNumber()
+        {
+            Random rnd = new Random();
+            return rnd.Next(0, listOfObjects.Length);
+        }
+
+        private void ShowNextObject()
+        {
+            for (int i = 0; i < labelArrayNext1.GetLength(0); i++)
+                for (int j = 0; j < labelArrayNext1.GetLength(1); j++)
+                {
+                    labelArrayNext1[i, j].BackColor = Color.Brown;
+                }
+            foreach (Point p in mObject1.Object)
+            {
+                labelArrayNext1[p.X, p.Y].BackColor = Color.Pink;
+            }
+
+            for (int i = 0; i < labelArrayNext2.GetLength(0); i++)
+                for (int j = 0; j < labelArrayNext2.GetLength(1); j++)
+                {
+                    labelArrayNext2[i, j].BackColor = Color.Brown;
+                }
+            foreach (Point p in mObject2.Object)
+            {
+                labelArrayNext2[p.X, p.Y].BackColor = Color.Pink;
+            }
+        }
+
+        private void CreateGrid()
+        {
+            for (int i = 0; i < labelArray1.GetLength(0); i++)
+                for (int j = 0; j < labelArray1.GetLength(1); j++)
+                {
+                    labelArray1[i, j] = new Label();
+                    labelArray1[i, j].Size = new Size(30, 30);
+                    labelArray1[i, j].Location = new Point(32 * j + 1, 32 * i + 1);
+                    this.Controls.Add(labelArray1[i, j]);
+
+                    labelArray2[i, j] = new Label();
+                    labelArray2[i, j].Size = new Size(30, 30);
+                    labelArray2[i, j].Location = new Point(32 * j + 1 + 466, 32 * i + 1);
+                    this.Controls.Add(labelArray2[i, j]);
+                }
+
+        }
+
+        private void CreateHelp()
+        {
+            //labelScore = new Label();
+            labelScore.Size = new Size(94, 30);
+            labelScore.Location = new Point(32 * labelArray1.GetLength(1) + 25, 33);
+            this.Controls.Add(labelScore);
+            labelScore.TextAlign = ContentAlignment.MiddleCenter;
+            labelScore.BackColor = Color.Brown;
+            labelLevel.Size = new Size(94, 30);
+            labelLevel.Location = new Point(32 * labelArray1.GetLength(1) + 25, 62);
+            this.Controls.Add(labelLevel);
+            labelLevel.BackColor = Color.Brown;
+            labelLevel.TextAlign = ContentAlignment.MiddleCenter;
+            for (int i = 0; i < labelArrayNext1.GetLength(0); i++)
+                for (int j = 0; j < labelArrayNext1.GetLength(1); j++)
+                {
+                    labelArrayNext1[i, j] = new Label();
+                    labelArrayNext1[i, j].Size = new Size(30, 30);
+                    labelArrayNext1[i, j].Location = new Point(32 * (j + labelArray1.GetLength(1)) + 25, 32 * (i + 3) + 1);
+                    this.Controls.Add(labelArrayNext1[i, j]);
+                    labelArrayNext1[i, j].BackColor = Color.Brown;
+
+                    labelArrayNext2[i, j] = new Label();
+                    labelArrayNext2[i, j].Size = new Size(30, 30);
+                    labelArrayNext2[i, j].Location = new Point(32 * (j + labelArray1.GetLength(1)) + 25, 32 * (i + 3) + 1 + 100);
+                    this.Controls.Add(labelArrayNext2[i, j]);
+                    labelArrayNext2[i, j].BackColor = Color.Brown;
+                }
+        }
+
+        private void Down1()
+        {
+            if (!mObject1.MoveDown())
+            {
+                labelScore.Text = "Score: " + game.Score.ToString();
+                labelLevel.Text = "Level: " + game.Level.ToString();
+                if (game.GameOver)
+                {
+                    //poziva se dialog za high score
+                    String s = "Kraj: " + game.Score + " Interval: " + timer1.Interval;
+                    //MessageBox.Show(s);
+                    FinishForm f3 = new FinishForm(game.Score.ToString(), newGame);
+                    f3.ShowDialog();
+                }
+
+                mObject1.Object = new TetrisObject(listOfObjects[GetRandomNumber()]);
+                ShowNextObject();
+            }
+        }
+        private void Down2()
+        {
+            if (!mObject2.MoveDown())
+            {
+                labelScore.Text = "Score: " + game.Score.ToString();
+                labelLevel.Text = "Level: " + game.Level.ToString();
+                if (game.GameOver)
+                {
+                    //poziva se dialog za high score
+                    String s = "Kraj: " + game.Score + " Interval: " + timer1.Interval;
+                    //MessageBox.Show(s);
+                    FinishForm f3 = new FinishForm(game.Score.ToString(), newGame);
+                    f3.ShowDialog();
+                }
+
+                mObject2.Object = new TetrisObject(listOfObjects[GetRandomNumber()]);
+                ShowNextObject();
+            }
+        }
+
+        private void MoveObject(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.A)
+            {
+                if (flag)
+                {
+                    mObjectFocus = mObject2;
+                    flag = false;
+                }
+                else
+                {
+                    mObjectFocus = mObject1;
+                    flag = true;
+                }
+                    
+                
+            }
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                    mObjectFocus.MoveToSide(Position.LEFT);
+                    break;
+                case Keys.Right:
+                    mObjectFocus.MoveToSide(Position.RIGHT);
+                    break;
+                case Keys.Q:
+                    mObjectFocus.Rotate(Position.ROTATEL);
+                    break;
+                case Keys.E:
+                    mObjectFocus.Rotate(Position.ROTATER);
+                    break;
+                case Keys.Down:
+                    if (flag)
+                        this.Down1();
+                    else
+                        this.Down2();
+                    break;
+                case Keys.P:
+                    game.Pause();
+                    break;
+            }
+        }
+
+        private void timer1_Tick_1(object sender, EventArgs e)
+        {
+            this.Down1();
+            this.Down2();
+        }
+    }
+}
+
