@@ -10,7 +10,7 @@ namespace Tetris
 {
     public class TetrisField
     {
-        //Red empty, Gray block
+        //DarkBlue empty, Gray block
         private Label[,] labelArray;
 
         public TetrisField(ref Label[,] labels)
@@ -20,10 +20,10 @@ namespace Tetris
             {
                 for (int j = 0; j < labelArray.GetLength(1); ++j)
                 {
-                    labelArray[i, j].BackColor = Color.Red;
+                    labelArray[i, j].BackColor = Color.DarkBlue;
                 }
             }
-        }
+    }
 
         public Color this[int i, int j] {
             get {
@@ -41,7 +41,7 @@ namespace Tetris
         {
             for (int i = 0; i < labelArray.GetLength(1); ++i)
             {
-                if (this[row, i] == Color.Red)
+                if (this[row, i] == Color.DarkBlue)
                     return false;
             }
             return true;
@@ -89,40 +89,87 @@ namespace Tetris
         }
 
         //@return int (helps to calculate score)
-        public Tuple<int, int> ClearFullRows() {
+        public Tuple<int, int> ClearFullRows()
+        {
             int num = 0;
             int bonus = 0;
             int numG;
             int numB;
             int numGold;
-            for (int i = labelArray.GetLength(0) - 1; i >= 0; i--) {
+            List<int> blackColumns = new List<int>();
+            for (int i = labelArray.GetLength(0) - 1; i >= 0; i--)
+            {
                 numG = this.CountGray(i);
                 numB = this.CountBlack(i);
                 numGold = this.CountGold(i);
-                if (numG + numB + numGold == labelArray.GetLength(1)) {
+                if (numG + numB + numGold == labelArray.GetLength(1))
+                {
                     num++;
                     if (numB != 0)
                     {
                         for (int k = 0; k < labelArray.GetLength(1); ++k)
                         {
                             if (this[i, k] == Color.Black)
+                            {
                                 this[i, k] = Color.Gray;
+                            }
                         }
                         bonus++;
                     }
                 }
-                else {
-                    if (numG + numB + numGold == 0) {
-                        for (int j = i + 1; j <= i + num; j++) {
-                            for (int k = 0; k < labelArray.GetLength(1); ++k) {
-                                if(this[j, k] != Color.Yellow)
-                                    this[j, k] = Color.Red;
+                else
+                {
+                    if (numG + numB + numGold == 0)
+                    {
+                        for (int j = i + 1; j <= i + num; j++)
+                        {
+                            for (int k = 0; k < labelArray.GetLength(1); ++k)
+                            {
+                                if (this[j, k] != Color.Yellow && this[j, k] != Color.Black)
+                                    this[j, k] = Color.DarkBlue;
                             }
                         }
                         break;
                     }
-                    for (int j = 0; j < labelArray.GetLength(1); ++j) {
-                        if (this[i, j] != Color.Yellow && this[i, j] != Color.Black && this[i + num, j] != Color.Black)
+                    for (int j = 0; j < labelArray.GetLength(1); ++j)
+                    {
+                        if (this[i, j] == Color.Black)
+                        {
+                            blackColumns.Add(j);
+                            Console.WriteLine("BLACK POINT at " + i + " " + j);
+                            continue;
+                            //MessageBox.Show("Column" + j + " added to blackColumns!");
+                        }
+                        else if (!blackColumns.Contains(j))
+                        {
+                            Console.WriteLine("NonblackColumns: " + i + " " + j);
+                            if (this[i, j] != Color.Yellow)
+                                this[i + num, j] = this[i, j];
+
+                            else
+                                this[i + num, j] = Color.Gray;
+                        }
+                        else
+                        {   // case when row above black label is full
+                            int l = 0;
+                            for( l = 0; l < num; ++l)
+                            {
+                                if (this[i + l, j] == Color.Black)
+                                    break;
+                            }
+
+                            if(l < num)
+                            {
+                                if (this[i, j] != Color.Yellow)
+                                    this[i + num, j] = this[i, j];
+
+                                else
+                                    this[i + num, j] = Color.Gray;
+                            }
+                            //Console.WriteLine("blackColumns: " + i + " " + j);
+                        }
+
+                        /*if (this[i, j] != Color.Yellow && this[i, j] != Color.Black && this[i + num, j] != Color.Black)
                             this[i + num, j] = this[i, j];
                         else if(this[i, j] == Color.Black || this[i + num, j] == Color.Black)
                         {
@@ -152,6 +199,7 @@ namespace Tetris
                         }
                         else
                             this[i + num, j] = Color.Gray;
+                    }*/
                     }
                 }
             }
