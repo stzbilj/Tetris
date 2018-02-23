@@ -101,7 +101,15 @@ namespace Tetris
                 numGold = this.CountGold(i);
                 if (numG + numB + numGold == labelArray.GetLength(1)) {
                     num++;
-                    bonus++;
+                    if (numB != 0)
+                    {
+                        for (int k = 0; k < labelArray.GetLength(1); ++k)
+                        {
+                            if (this[i, k] == Color.Black)
+                                this[i, k] = Color.Gray;
+                        }
+                        bonus++;
+                    }
                 }
                 else {
                     if (numG + numB + numGold == 0) {
@@ -114,8 +122,34 @@ namespace Tetris
                         break;
                     }
                     for (int j = 0; j < labelArray.GetLength(1); ++j) {
-                        if (this[i, j] != Color.Yellow)
+                        if (this[i, j] != Color.Yellow && this[i, j] != Color.Black && this[i + num, j] != Color.Black)
                             this[i + num, j] = this[i, j];
+                        else if(this[i, j] == Color.Black || this[i + num, j] == Color.Black)
+                        {
+                            if (this[i, j] == Color.Black && this[i + num, j] != Color.Black)
+                            {
+                                this[i, j] = Color.Black;
+                            }
+                            else if(this[i, j] != Color.Black && this[i + num, j] == Color.Black)
+                            {
+                                if(CountBlack(i+num) + CountGold(i + num) + CountGray(i + num) != labelArray.GetLength(1))
+                                    this[i + num, j] = Color.Black;
+                                else
+                                {
+                                    this[i + num, j] = this[i, j];
+                                }
+                            }
+                            else
+                            {
+                                if (CountBlack(i + num) + CountGold(i + num) + CountGray(i + num) != labelArray.GetLength(1))
+                                    this[i + num, j] = Color.Black;
+                                else
+                                {
+                                    this[i + num, j] = this[i, j];
+                                }
+                                this[i, j] = Color.Black;
+                            }
+                        }
                         else
                             this[i + num, j] = Color.Gray;
                     }

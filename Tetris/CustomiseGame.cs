@@ -27,6 +27,7 @@ namespace Tetris
 
         CheckBox addObstacles = new CheckBox();
         CheckBox addGoldenPoints = new CheckBox();
+        CheckBox addParallelGame = new CheckBox();
 
         Button buttonContinue = new Button();
         Button addingButton = new Button();
@@ -244,8 +245,17 @@ namespace Tetris
         {
             bool addObs = addObstacles.Checked;
             bool addPts = addGoldenPoints.Checked;
-            Form1 game = new Form1(listOfShapes, addObs, addPts);
-            game.ShowDialog();
+            if(addParallelGame.Checked)
+            {
+                ParallelGame parallelGame = new ParallelGame(listOfShapes);
+                parallelGame.ShowDialog();
+            }
+            else
+            {
+                Form1 game = new Form1(listOfShapes, addObs, addPts);
+                game.ShowDialog();
+            }
+           
         }
 
         public CustomiseGame()
@@ -360,12 +370,17 @@ namespace Tetris
             addObstacles.Text = "Add obstacles";
             //addObstacles.TextAlign = ContentAlignment.TopCenter;
             groupBox4.Controls.Add(addObstacles);
-            addObstacles.Location = new Point(100, 50);
+            addObstacles.Location = new Point(50, 50);
 
             addGoldenPoints.Size = new Size(150, 20);
             addGoldenPoints.Text = "Add golden points";
             groupBox4.Controls.Add(addGoldenPoints);
-            addGoldenPoints.Location = new Point(300, 50);
+            addGoldenPoints.Location = new Point(200, 50);
+
+            addParallelGame.Size = new Size(150, 20);
+            addParallelGame.Text = "Add Parallel Game";
+            groupBox4.Controls.Add(addParallelGame);
+            addParallelGame.Location = new Point(350, 50);
         
             // button to start the game
             play.Size = new Size(542, 40);

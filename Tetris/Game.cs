@@ -12,12 +12,14 @@ namespace Tetris
         private List<TetrisObject> listOfTetrisObject;
         bool addObstacles;
         bool addGoldenPoint;
+        bool addParallelGame;
 
-        public Game(List<TetrisObject> _listOfTetrisObject, bool _addObstacle=false, bool _addGodelnPoint=false)
+        public Game(List<TetrisObject> _listOfTetrisObject, bool _addObstacle=false, bool _addGodelnPoint=false, bool _addParallelGame = false)
         {
             listOfTetrisObject = _listOfTetrisObject;
             addObstacles = _addObstacle;
             addGoldenPoint = _addGodelnPoint;
+            addParallelGame = _addParallelGame;
 
         }
 
@@ -42,6 +44,8 @@ namespace Tetris
             if (g1.addObstacles != g2.addObstacles)
                 return false;
             if (g1.addGoldenPoint != g2.addGoldenPoint)
+                return false;
+            if (g1.addParallelGame != g2.addParallelGame)
                 return false;
             return true;
         }

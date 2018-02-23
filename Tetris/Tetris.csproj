@@ -71,6 +71,12 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameScore.cs" />
     <Compile Include="MovingObject.cs" />
+    <Compile Include="ParallelGame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ParallelGame.Designer.cs">
+      <DependentUpon>ParallelGame.cs</DependentUpon>
+    </Compile>
     <Compile Include="Position.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ParallelGame.resx">
+      <DependentUpon>ParallelGame.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -96,8 +96,10 @@ namespace Tetris
             else
             {
                 tField.PlaceObject(row, column, tObject);
-                game.Score = tField.ClearFullRows().Item1;
-                game.Bonus = tField.ClearFullRows().Item2;
+                Tuple<int, int> temp = new Tuple<int, int>(0, 0);
+                temp = tField.ClearFullRows();
+                game.Score = temp.Item1;
+                game.Bonus = temp.Item2;
                 while (game.Score / game.Level >= 1000)
                     game.Level = game.Level + 1;
                 row = 0;
