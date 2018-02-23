@@ -60,7 +60,7 @@ namespace Tetris
             checkbox.Size = new Size(15, 14);
             groupBox1.Controls.Add(checkbox);
             checkbox.Location = new Point(x, y);
-            //checkbox.Show();
+            checkbox.Checked = true;
         }
 
         private bool addToShapes(int[,] newShape, bool checkEquals = false)

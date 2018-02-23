@@ -27,14 +27,13 @@ namespace Tetris
         private TetrisObject[] listOfObjects;
         private GameScore game;
         private Game newGame;
+        Random rnd = new Random();
         private bool flag;
 
         public ParallelGame(List<TetrisObject> listOfShapes)
         {
 
             SuspendLayout();
-
-            Random rnd = new Random();
 
             labelArray1 = new Label[20, 10];
             labelArray2 = new Label[20, 10];
@@ -47,9 +46,9 @@ namespace Tetris
             labelArrayNext2 = new Label[3, 3];
 
             game = new GameScore(ref timer1);
-            labelScore.Text = "SCORE: " + game.Score.ToString();
+            labelScore.Text = "SCORE:\n" + game.Score.ToString();
             labelLevel.Text = "LEVEL: " + game.Level.ToString();
-            labelFocus.Text = "Left Game"; 
+            labelFocus.Text = "<--"; 
 
             this.CreateGrid();
 
@@ -84,7 +83,6 @@ namespace Tetris
 
         private int GetRandomNumber()
         {
-            Random rnd = new Random();
             return rnd.Next(0, listOfObjects.Length);
         }
 
@@ -132,7 +130,7 @@ namespace Tetris
         private void CreateHelp()
         {
             //labelScore = new Label();
-            labelScore.Size = new Size(94, 30);
+            labelScore.Size = new Size(94, 62);
             labelScore.Location = new Point(32 * labelArray1.GetLength(1) + 25, 33);
             this.Controls.Add(labelScore);
             labelScore.TextAlign = ContentAlignment.MiddleCenter;
@@ -141,7 +139,7 @@ namespace Tetris
             labelScore.Font = new Font(labelScore.Font, FontStyle.Bold);
 
             labelLevel.Size = new Size(94, 30);
-            labelLevel.Location = new Point(32 * labelArray1.GetLength(1) + 25, 62);
+            labelLevel.Location = new Point(32 * labelArray1.GetLength(1) + 25, 93);
             this.Controls.Add(labelLevel);
             labelLevel.BackColor = Color.DarkBlue;
             labelLevel.TextAlign = ContentAlignment.MiddleCenter;
@@ -149,11 +147,11 @@ namespace Tetris
             labelLevel.Font = new Font(labelLevel.Font, FontStyle.Bold);
 
             labelFocus.Size = new Size(94, 30);
-            labelFocus.Location = new Point(32 * labelArray1.GetLength(1) + 25, 265+32);
+            labelFocus.Location = new Point(32 * labelArray1.GetLength(1) + 25, 14*32 + 1);
             this.Controls.Add(labelFocus);
             labelFocus.BackColor = Color.DarkBlue;
             labelFocus.TextAlign = ContentAlignment.MiddleCenter;
-            labelFocus.ForeColor = Color.White;
+            labelFocus.ForeColor = Color.Yellow;
             labelFocus.Font = new Font(labelFocus.Font, FontStyle.Bold);
 
             for (int i = 0; i < labelArrayNext1.GetLength(0); i++)
@@ -161,13 +159,13 @@ namespace Tetris
                 {
                     labelArrayNext1[i, j] = new Label();
                     labelArrayNext1[i, j].Size = new Size(30, 30);
-                    labelArrayNext1[i, j].Location = new Point(32 * (j + labelArray1.GetLength(1)) + 25, 32 * (i + 3) + 1);
+                    labelArrayNext1[i, j].Location = new Point(32 * (j + labelArray1.GetLength(1)) + 25, 32 * (i + 4) + 1);
                     this.Controls.Add(labelArrayNext1[i, j]);
                     labelArrayNext1[i, j].BackColor = Color.DarkBlue;
 
                     labelArrayNext2[i, j] = new Label();
                     labelArrayNext2[i, j].Size = new Size(30, 30);
-                    labelArrayNext2[i, j].Location = new Point(32 * (j + labelArray1.GetLength(1)) + 25, 32 * (i + 3) + 1 + 100);
+                    labelArrayNext2[i, j].Location = new Point(32 * (j + labelArray1.GetLength(1)) + 25, 32 * (i + 10) + 1);
                     this.Controls.Add(labelArrayNext2[i, j]);
                     labelArrayNext2[i, j].BackColor = Color.DarkBlue;
                 }
@@ -177,13 +175,10 @@ namespace Tetris
         {
             if (!mObject1.MoveDown())
             {
-                labelScore.Text = "Score: " + game.Score.ToString();
-                labelLevel.Text = "Level: " + game.Level.ToString();
+                labelScore.Text = "SCORE:\n" + game.Score.ToString();
+                labelLevel.Text = "LEVEL: " + game.Level.ToString();
                 if (game.GameOver)
                 {
-                    //poziva se dialog za high score
-                    String s = "Kraj: " + game.Score + " Interval: " + timer1.Interval;
-                    //MessageBox.Show(s);
                     FinishForm f3 = new FinishForm(game.Score.ToString(), newGame);
                     f3.ShowDialog();
                 }
@@ -196,13 +191,10 @@ namespace Tetris
         {
             if (!mObject2.MoveDown())
             {
-                labelScore.Text = "SCORE: " + game.Score.ToString();
+                labelScore.Text = "SCORE:\n" + game.Score.ToString();
                 labelLevel.Text = "LEVEL: " + game.Level.ToString();
                 if (game.GameOver)
                 {
-                    //poziva se dialog za high score
-                    String s = "Kraj: " + game.Score + " Interval: " + timer1.Interval;
-                    //MessageBox.Show(s);
                     FinishForm f3 = new FinishForm(game.Score.ToString(), newGame);
                     f3.ShowDialog();
                 }
@@ -220,13 +212,13 @@ namespace Tetris
                 {
                     mObjectFocus = mObject2;
                     flag = false;
-                    labelFocus.Text = "Right Game";
+                    labelFocus.Text = "-->";
                 }
                 else
                 {
                     mObjectFocus = mObject1;
                     flag = true;
-                    labelFocus.Text = "Left Game";
+                    labelFocus.Text = "<--";
                 }
                     
                 

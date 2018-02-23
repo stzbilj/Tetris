@@ -19,6 +19,7 @@ namespace Tetris
         public GameScore(ref Timer _timer)
         {
             timer = _timer;
+            timer.Interval = 950;
             score = 0;
             level = 1;
             bonus = 0;
@@ -34,7 +35,7 @@ namespace Tetris
                 {
                     score += 100 * value + 100 * (value - 1);
                     if ((score / 1000) < 10)
-                        timer.Interval = 1000 - 90 * Level - 60;
+                        timer.Interval = 850 - 70 * Level;
                 }
             }
         }

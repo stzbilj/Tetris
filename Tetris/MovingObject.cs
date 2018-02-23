@@ -113,6 +113,18 @@ namespace Tetris
             }
         }
 
+        public bool MoveUp()
+        {
+            if (!CheckCollision(Position.UP))
+            {
+                this.ClearObject();
+                row--;
+                this.DrawObject();
+                return true;
+            }
+            return false;
+        }
+
         public void Rotate(Position pos)
         {
             int rotate = 0;
@@ -131,6 +143,7 @@ namespace Tetris
                 this.DrawObject();
             }
         }
+
         private bool CheckCollision(Position pos)
         {
             int newRow = row;
@@ -138,6 +151,11 @@ namespace Tetris
             TetrisObject tetrisObject = new TetrisObject(tObject);
             switch (pos)
             {
+                case Position.UP:
+                    newRow--;
+                    if (newRow < 0)
+                        return true;
+                    break;
                 case Position.DOWN:
                     newRow++;
                     break;
@@ -171,7 +189,7 @@ namespace Tetris
                     return true;
                 if (tField[p.X + newRow, p.Y + newColumn] == Color.Gold)
                 {
-                    goldenPoints += 1;
+                    goldenPoints += 3;
                     tField[p.X + newRow, p.Y + newColumn] = Color.Yellow;
                 }
                 if (tField[p.X + newRow, p.Y + newColumn] == Color.Gray || tField[p.X + newRow, p.Y + newColumn] == Color.Black)
