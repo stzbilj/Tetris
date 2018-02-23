@@ -59,7 +59,7 @@ namespace Tetris
         {
             foreach (Point p in tObject)
             {
-                tField[row + p.X, column + p.Y] = Color.Red;
+                tField[row + p.X, column + p.Y] = Color.DarkBlue;
             }
         }
 

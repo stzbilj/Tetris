@@ -12,7 +12,7 @@ namespace Tetris
     [Serializable]
     public class TetrisObject:IEnumerable<Point>
     {   
-        //Yellow moving object, Red empty field
+        //Yellow moving object, DarkBlue empty field
         private int[, ] matrix;
         private List<List<Point>> rotationPoints;
         private int rotation;
@@ -175,7 +175,7 @@ namespace Tetris
             return true;
         }
         
-        //Transform matrix so neither 1. row or 1. column are Red
+        //Transform matrix so neither 1. row or 1. column are DarkBlue
         public void Reposition()
         {
             //row

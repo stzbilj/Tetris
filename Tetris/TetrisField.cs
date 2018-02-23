@@ -10,7 +10,7 @@ namespace Tetris
 {
     public class TetrisField
     {
-        //Red empty, Gray block
+        //DarkBlue empty, Gray block
         private Label[,] labelArray;
 
         public TetrisField(ref Label[,] labels)
@@ -20,7 +20,7 @@ namespace Tetris
             {
                 for (int j = 0; j < labelArray.GetLength(1); ++j)
                 {
-                    labelArray[i, j].BackColor = Color.Red;
+                    labelArray[i, j].BackColor = Color.DarkBlue;
                 }
             }
     }
@@ -41,7 +41,7 @@ namespace Tetris
         {
             for (int i = 0; i < labelArray.GetLength(1); ++i)
             {
-                if (this[row, i] == Color.Red)
+                if (this[row, i] == Color.DarkBlue)
                     return false;
             }
             return true;
@@ -126,7 +126,7 @@ namespace Tetris
                             for (int k = 0; k < labelArray.GetLength(1); ++k)
                             {
                                 if (this[j, k] != Color.Yellow && this[j, k] != Color.Black)
-                                    this[j, k] = Color.Red;
+                                    this[j, k] = Color.DarkBlue;
                             }
                         }
                         break;

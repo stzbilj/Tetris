@@ -48,11 +48,12 @@ namespace Tetris
             this.CreateHelp();
             tField = new TetrisField(ref labelArray);
             
-            this.BackColor = Color.Aqua;
+            this.BackColor = Color.CornflowerBlue;
             InitializeComponent();
             game = new GameScore(ref timer1);
-            labelScore.Text = "Score: " + game.Score.ToString();
-            labelLevel.Text = "Level: " + game.Level.ToString();
+
+            labelScore.Text = "SCORE: " + game.Score.ToString();
+            labelLevel.Text = "LEVEL: " + game.Level.ToString();
             //Tetris objects in a game, player can add new objects
             //Stjepan: Forma ce ovo primati i prosljedivati tu listu MovingObject
             int[,] objekt1 = new int[,] { { 1, 1, 1 }, { 0, 0, 0 }, { 0, 0, 0 } };
@@ -105,13 +106,13 @@ namespace Tetris
             labelLevel = new Label();
             labelArrayNext = new Label[3, 3];
             game = new GameScore(ref timer1);
-            labelScore.Text = "Score: " + game.Score.ToString();
-            labelLevel.Text = "Level: " + game.Level.ToString();
+            labelScore.Text = "SCORE: " + game.Score.ToString();
+            labelLevel.Text = "LEVEL: " + game.Level.ToString();
             this.CreateGrid();
             this.CreateHelp();
             tField = new TetrisField(ref labelArray);
 
-            this.BackColor = Color.Aqua;
+            this.BackColor = Color.CornflowerBlue;
             InitializeComponent();
             game = new GameScore(ref timer1);
 
@@ -140,7 +141,7 @@ namespace Tetris
                 int x1 = rnd.Next(4, 19);
                 int y1 = rnd.Next(0, 9);
 
-                if (tField[x1, y1] == Color.Red)
+                if (tField[x1, y1] == Color.DarkBlue)
                 {
                     tField[x1, y1] = color;
                     blackFieldAdded = true;
@@ -167,15 +168,20 @@ namespace Tetris
         private void CreateHelp()
         {
             //labelScore = new Label();
-            labelScore.Size = new Size(94, 30);
-            labelScore.Location = new Point(32 * labelArray.GetLength(1) + 25, 33);
+            labelScore.Size = new Size(104, 30);
+            labelScore.Location = new Point(32 * labelArray.GetLength(1) + 20, 33);
             this.Controls.Add(labelScore);
             labelScore.TextAlign = ContentAlignment.MiddleCenter;
-            labelScore.BackColor = Color.Brown;
-            labelLevel.Size = new Size(94, 30);
-            labelLevel.Location = new Point(32 * labelArray.GetLength(1) + 25, 62);
+            labelScore.BackColor = Color.DarkBlue;
+            labelScore.ForeColor = Color.White;
+            labelScore.Font = new Font(labelScore.Font, FontStyle.Bold);
+
+            labelLevel.Size = new Size(104, 30);
+            labelLevel.Location = new Point(32 * labelArray.GetLength(1) + 20, 62);
             this.Controls.Add(labelLevel);
-            labelLevel.BackColor = Color.Brown;
+            labelLevel.BackColor = Color.DarkBlue;
+            labelLevel.ForeColor = Color.White;
+            labelLevel.Font = new Font(labelLevel.Font, FontStyle.Bold);
             labelLevel.TextAlign = ContentAlignment.MiddleCenter; 
             for (int i = 0; i < labelArrayNext.GetLength(0); i++)
                 for (int j = 0; j < labelArrayNext.GetLength(1); j++)
@@ -184,16 +190,18 @@ namespace Tetris
                     labelArrayNext[i, j].Size = new Size(30, 30);
                     labelArrayNext[i, j].Location = new Point(32 * (j + labelArray.GetLength(1) ) + 25, 32 * (i+3) + 1);
                     this.Controls.Add(labelArrayNext[i, j]);
-                    labelArrayNext[i, j].BackColor = Color.Brown;
+                    labelArrayNext[i, j].BackColor = Color.DarkBlue;
                 }
 
             if (addGoldenPoints)
             {
-                goldenPts.Text = "Golden: 0";
-                goldenPts.Size = new Size(94, 30);
+                goldenPts.Text = "GOLDEN: 0";
+                goldenPts.Size = new Size(104, 30);
                 this.Controls.Add(goldenPts);
-                goldenPts.Location = new Point(32 * labelArray.GetLength(1) + 25, 250);
-                goldenPts.BackColor = Color.Brown;
+                goldenPts.Location = new Point(32 * labelArray.GetLength(1) + 20, 250);
+                goldenPts.BackColor = Color.DarkBlue;
+                goldenPts.ForeColor = Color.White;
+                goldenPts.Font = new Font(goldenPts.Font, FontStyle.Bold);
                 goldenPts.TextAlign = ContentAlignment.MiddleCenter;
             }
         }
@@ -207,9 +215,9 @@ namespace Tetris
         {
             if (!mObject.MoveDown())
             {
-                labelScore.Text = "Score: " + game.Score.ToString();
-                labelLevel.Text = "Level: " + game.Level.ToString();
-                goldenPts.Text = "Golden: " + mObject.goldenPoints.ToString();
+                labelScore.Text = "SCORE: " + game.Score.ToString();
+                labelLevel.Text = "LEVEL: " + game.Level.ToString();
+                goldenPts.Text = "GOLDEN: " + mObject.goldenPoints.ToString();
                 if (game.GameOver)
                 {
                     //poziva se dialog za high score
@@ -237,7 +245,7 @@ namespace Tetris
                     if (addGoldenPoints)
                     {
                         if (goldenPosition.Item1 != 0)
-                            tField[goldenPosition.Item1, goldenPosition.Item2] = Color.Red;
+                            tField[goldenPosition.Item1, goldenPosition.Item2] = Color.DarkBlue;
                         if(goldenPointsInterval == 0)
                         {
                             Tuple<int, int> temp = findNewColoredField(Color.Gold);
@@ -251,7 +259,7 @@ namespace Tetris
                             goldenPointsInterval -= 1;
                         }
                     }
-                    goldenPts.Text = "Golden: " + mObject.goldenPoints.ToString();
+                    goldenPts.Text = "GOLDEN: " + mObject.goldenPoints.ToString();
 
                     mObject.Object = new TetrisObject(listOfObjects[GetRandomNumber()]);
                     ShowNextObject();
@@ -295,11 +303,11 @@ namespace Tetris
             for (int i = 0; i < labelArrayNext.GetLength(0); i++)
                 for (int j = 0; j < labelArrayNext.GetLength(1); j++)
                 {
-                    labelArrayNext[i, j].BackColor = Color.Brown;
+                    labelArrayNext[i, j].BackColor = Color.DarkBlue;
                 }
             foreach(Point p in mObject.Object)
             {
-                labelArrayNext[p.X, p.Y].BackColor = Color.Pink;
+                labelArrayNext[p.X, p.Y].BackColor = Color.Yellow;
             }
         }
     }
