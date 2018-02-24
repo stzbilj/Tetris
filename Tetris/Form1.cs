@@ -106,13 +106,14 @@ namespace Tetris
             labelScore = new Label();
             labelLevel = new Label();
             labelArrayNext = new Label[3, 3];
+            this.CreateGrid();
+            this.CreateHelp();
 
             InitializeComponent();
             game = new GameScore(ref timer1);
-            labelScore.Text = "SCORE:\n" + game.Score.ToString();
-            labelLevel.Text = "LEVEL: " + game.Level.ToString();
-            this.CreateGrid();
-            this.CreateHelp();
+            labelScore.Text = "Score: " + game.Score.ToString();
+            labelLevel.Text = "Level: " + game.Level.ToString();
+  
             tField = new TetrisField(ref labelArray);
 
             this.BackColor = Color.CornflowerBlue;
@@ -196,7 +197,7 @@ namespace Tetris
 
             if (addGoldenPoints)
             {
-                goldenPts.Text = "GOLDEN: 0";
+                goldenPts.Text = "Golden: 0";
                 goldenPts.Size = new Size(104, 30);
                 this.Controls.Add(goldenPts);
                 goldenPts.Location = new Point(32 * labelArray.GetLength(1) + 20, 250);
@@ -216,9 +217,9 @@ namespace Tetris
         {
             if (!mObject.MoveDown())
             {
-                labelScore.Text = "SCORE:\n" + game.Score.ToString();
-                labelLevel.Text = "LEVEL: " + game.Level.ToString();
-                goldenPts.Text = "GOLDEN: " + mObject.goldenPoints.ToString();
+                labelScore.Text = "Score: " + game.Score.ToString();
+                labelLevel.Text = "Level: " + game.Level.ToString();
+                goldenPts.Text = "Golden: " + mObject.goldenPoints.ToString();
                 if (game.GameOver)
                 {
                     FinishForm f3 = new FinishForm(game.Score.ToString(), newGame);
@@ -243,8 +244,16 @@ namespace Tetris
                     if (addGoldenPoints)
                     {
                         if (goldenPosition.Item1 != 0)
-                            tField[goldenPosition.Item1, goldenPosition.Item2] = Color.DarkBlue;
-                        if(goldenPointsInterval == 0)
+                        {
+                            /*if (tField[goldenPosition.Item1, goldenPosition.Item2] != Color.Yellow)
+                                tField[goldenPosition.Item1, goldenPosition.Item2] = Color.Green;
+                            else
+                                tField[goldenPosition.Item1, goldenPosition.Item2] = Color.Gray;*/
+                            if (tField[goldenPosition.Item1, goldenPosition.Item2] == Color.Gold)
+                                tField[goldenPosition.Item1, goldenPosition.Item2] = Color.DarkBlue;
+                            goldenPosition = new Tuple<int, int>(0, 0);
+                        }
+                        if (goldenPointsInterval == 0)
                         {
                             Tuple<int, int> temp = findNewColoredField(Color.Gold);
                             //findNewColoredField(Color.Gold);
@@ -256,7 +265,7 @@ namespace Tetris
                             goldenPointsInterval -= 1;
                         }
                     }
-                    goldenPts.Text = "GOLDEN: " + mObject.goldenPoints.ToString();
+                    goldenPts.Text = "Golden: " + mObject.goldenPoints.ToString();
 
                     mObject.Object = new TetrisObject(listOfObjects[GetRandomNumber()]);
                     ShowNextObject();
@@ -286,7 +295,7 @@ namespace Tetris
                     if (mObject.goldenPoints > 0 && mObject.MoveUp())
                     {
                         mObject.goldenPoints--;
-                        goldenPts.Text = "GOLDEN: " + mObject.goldenPoints.ToString();
+                        goldenPts.Text = "Golden: " + mObject.goldenPoints.ToString();
                     }
                     break;
                 case Keys.R:
@@ -300,7 +309,7 @@ namespace Tetris
                         mObject.Object = tetrisObject;
                         ShowNextObject();
                         mObject.goldenPoints--;
-                        goldenPts.Text = "GOLDEN: " + mObject.goldenPoints.ToString();
+                        goldenPts.Text = "Golden: " + mObject.goldenPoints.ToString();
                     }
                     break;
                 case Keys.P:

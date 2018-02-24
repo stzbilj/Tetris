@@ -93,6 +93,7 @@ namespace Tetris
         {
             int num = 0;
             int bonus = 0;
+            int[] numAfterBlack = new int[labelArray.GetLength(1)];
             int numG;
             int numB;
             int numGold;
@@ -105,16 +106,23 @@ namespace Tetris
                 if (numG + numB + numGold == labelArray.GetLength(1))
                 {
                     num++;
-                    if (numB != 0)
+                    if (numB != 0 || numGold != 0)
                     {
                         for (int k = 0; k < labelArray.GetLength(1); ++k)
                         {
-                            if (this[i, k] == Color.Black)
+                            if (this[i, k] == Color.Black || this[i, k] == Color.Gold)
                             {
                                 this[i, k] = Color.Gray;
+                                //numAfterBlack[j] = 0;
                             }
                         }
                         bonus++;
+                    }
+
+                    for (int k = 0; k < numAfterBlack.Length; ++k)
+                    {
+                        if (blackColumns.Contains(k))
+                            numAfterBlack[k] += 1;
                     }
                 }
                 else
@@ -125,81 +133,67 @@ namespace Tetris
                         {
                             for (int k = 0; k < labelArray.GetLength(1); ++k)
                             {
-                                if (this[j, k] != Color.Yellow && this[j, k] != Color.Black)
-                                    this[j, k] = Color.DarkBlue;
+                                if (!blackColumns.Contains(k))
+                                {
+                                    if (this[j, k] != Color.Yellow && this[j, k] != Color.Black)
+                                        this[j, k] = Color.DarkBlue;
+                                }
                             }
                         }
                         break;
                     }
                     for (int j = 0; j < labelArray.GetLength(1); ++j)
                     {
+                        int tempNum;
                         if (this[i, j] == Color.Black)
                         {
                             blackColumns.Add(j);
-                            Console.WriteLine("BLACK POINT at " + i + " " + j);
-                            continue;
-                            //MessageBox.Show("Column" + j + " added to blackColumns!");
+
+                            if (numAfterBlack[j] == 0)
+                                tempNum = num;
+                            else
+                                tempNum = numAfterBlack[j];
+
+                            // now we need to replace those blocks under the black block because
+                            // the above blocks can not do that
+                            for(int m = 1; m <= tempNum; ++m)
+                            {
+                                this[i + m, j] = Color.DarkBlue;
+                            }
+                                //MessageBox.Show("Column" + j + " added to blackColumns!");
+                            numAfterBlack[j] = 0;
                         }
                         else if (!blackColumns.Contains(j))
                         {
-                            Console.WriteLine("NonblackColumns: " + i + " " + j);
-                            if (this[i, j] != Color.Yellow)
+                            if (this[i, j] != Color.Yellow && this[i, j] != Color.Gold)
+                            {
                                 this[i + num, j] = this[i, j];
-
+                            }
+                            else if (this[i, j] == Color.Gold)
+                                this[i + num, j] = Color.DarkBlue;
                             else
                                 this[i + num, j] = Color.Gray;
                         }
                         else
                         {   // case when row above black label is full
-                            int l = 0;
-                            for( l = 0; l < num; ++l)
+                            int move = numAfterBlack[j];
+                            if (move != 0)
                             {
-                                if (this[i + l, j] == Color.Black)
-                                    break;
-                            }
-
-                            if(l < num)
-                            {
-                                if (this[i, j] != Color.Yellow)
-                                    this[i + num, j] = this[i, j];
-
-                                else
-                                    this[i + num, j] = Color.Gray;
-                            }
-                            //Console.WriteLine("blackColumns: " + i + " " + j);
-                        }
-
-                        /*if (this[i, j] != Color.Yellow && this[i, j] != Color.Black && this[i + num, j] != Color.Black)
-                            this[i + num, j] = this[i, j];
-                        else if(this[i, j] == Color.Black || this[i + num, j] == Color.Black)
-                        {
-                            if (this[i, j] == Color.Black && this[i + num, j] != Color.Black)
-                            {
-                                this[i, j] = Color.Black;
-                            }
-                            else if(this[i, j] != Color.Black && this[i + num, j] == Color.Black)
-                            {
-                                if(CountBlack(i+num) + CountGold(i + num) + CountGray(i + num) != labelArray.GetLength(1))
-                                    this[i + num, j] = Color.Black;
-                                else
+                                if (this[i, j] != Color.Yellow && this[i, j] != Color.Gold)
                                 {
-                                    this[i + num, j] = this[i, j];
+                                    this[i + move, j] = this[i, j];
+                                }
+                                else if (this[i, j] == Color.Gold)
+                                    this[i + move, j] = Color.DarkBlue;
+                                else
+                                    this[i + move, j] = Color.Gray;
+
+                                if (move != 0)
+                                {
+                                    this[i, j] = Color.DarkBlue;
                                 }
                             }
-                            else
-                            {
-                                if (CountBlack(i + num) + CountGold(i + num) + CountGray(i + num) != labelArray.GetLength(1))
-                                    this[i + num, j] = Color.Black;
-                                else
-                                {
-                                    this[i + num, j] = this[i, j];
-                                }
-                                this[i, j] = Color.Black;
-                            }
                         }
-                        else
-                            this[i + num, j] = Color.Gray;
-                    }*/
                     }
                 }
             }
