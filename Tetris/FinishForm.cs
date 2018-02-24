@@ -25,6 +25,9 @@ namespace Tetris
         {
             InitializeComponent();
 
+            this.BackColor = Color.CornflowerBlue;
+            saveBtn.BackColor = Color.DarkBlue;
+            saveBtn.ForeColor = Color.Yellow;
             score = Convert.ToInt32(_score);
             game = _game;
             listOfScores = new List<KeyValuePair<string, int>>();
@@ -96,7 +99,9 @@ namespace Tetris
             Label[] labelArray = new Label[7] { label3, label4, label5, label6, label7, label8, label9 };
             for (int i = 0; i < length; i++)
             {
-                labelArray[i].Text = (i + 1).ToString() + " " + listOfScores[i].Key + " " + listOfScores[i].Value.ToString();
+                labelArray[i].Font = new Font(label1.Font,FontStyle.Bold);
+                labelArray[i].ForeColor = Color.White;
+                labelArray[i].Text = (i + 1).ToString() + ". " + listOfScores[i].Key + " " + listOfScores[i].Value.ToString();
             }
         }
         public static void WriteToBinaryFile<T>(string filePath, T objectToWrite, bool append = false)

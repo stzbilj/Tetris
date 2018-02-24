@@ -45,6 +45,7 @@ namespace Tetris
             labelArrayNext1 = new Label[3, 3];
             labelArrayNext2 = new Label[3, 3];
 
+            InitializeComponent();
             game = new GameScore(ref timer1);
             labelScore.Text = "SCORE:\n" + game.Score.ToString();
             labelLevel.Text = "LEVEL: " + game.Level.ToString();
@@ -58,8 +59,7 @@ namespace Tetris
 
 
             this.BackColor = Color.CornflowerBlue;
-            InitializeComponent();
-            game = new GameScore(ref timer1);
+            //game = new GameScore(ref timer1);
 
             listOfObjects = new TetrisObject[listOfShapes.Count];
             listOfObjects = listOfShapes.ToArray();

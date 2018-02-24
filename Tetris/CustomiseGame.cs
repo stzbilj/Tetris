@@ -245,16 +245,15 @@ namespace Tetris
         {
             bool addObs = addObstacles.Checked;
             bool addPts = addGoldenPoints.Checked;
-            if(addParallelGame.Checked)
+            /*if(addParallelGame.Checked)
             {
                 ParallelGame parallelGame = new ParallelGame(listOfShapes);
                 parallelGame.ShowDialog();
-            }
-            else
-            {
-                Form1 game = new Form1(listOfShapes, addObs, addPts);
-                game.ShowDialog();
-            }
+            }*/
+         
+            Form1 game = new Form1(listOfShapes, addObs, addPts);
+            game.ShowDialog();
+            
            
         }
 
@@ -266,6 +265,8 @@ namespace Tetris
                 " OK to continue");*/
 
             InitializeComponent();
+
+            this.BackColor = Color.CornflowerBlue;
 
             // the first standard shape
             setLabel(groupBox1, label1, 20, 41);
@@ -318,6 +319,8 @@ namespace Tetris
             setCheckBox(checkbox7, 458, 115);
 
             // add button to groupbox
+            buttonContinue.BackColor = Color.DarkBlue;
+            buttonContinue.ForeColor = Color.White;
             buttonContinue.Text = "Continue";
             buttonContinue.Size = new Size(60, 30);
             buttonContinue.Click += new EventHandler(buttonContinue_Click);
@@ -359,6 +362,8 @@ namespace Tetris
             label36.Click += new EventHandler(labelClicked);
 
             // button to add a new shape
+            addingButton.BackColor = Color.DarkBlue;
+            addingButton.ForeColor = Color.White;
             addingButton.Size = new Size(62, 20);
             groupBox2.Controls.Add(addingButton);
             addingButton.Location = new Point(436, 120);
@@ -370,19 +375,21 @@ namespace Tetris
             addObstacles.Text = "Add obstacles";
             //addObstacles.TextAlign = ContentAlignment.TopCenter;
             groupBox4.Controls.Add(addObstacles);
-            addObstacles.Location = new Point(50, 50);
+            addObstacles.Location = new Point(100, 50);
 
             addGoldenPoints.Size = new Size(150, 20);
             addGoldenPoints.Text = "Add golden points";
             groupBox4.Controls.Add(addGoldenPoints);
-            addGoldenPoints.Location = new Point(200, 50);
+            addGoldenPoints.Location = new Point(300, 50);
 
-            addParallelGame.Size = new Size(150, 20);
+            /*addParallelGame.Size = new Size(150, 20);
             addParallelGame.Text = "Add Parallel Game";
             groupBox4.Controls.Add(addParallelGame);
-            addParallelGame.Location = new Point(350, 50);
-        
+            addParallelGame.Location = new Point(350, 50);*/
+
             // button to start the game
+            play.BackColor = Color.DarkBlue;
+            play.ForeColor = Color.White;
             play.Size = new Size(542, 40);
             this.Controls.Add(play);
             play.Location = new Point(1, 516);
